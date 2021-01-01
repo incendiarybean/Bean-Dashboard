@@ -2,28 +2,26 @@
 
 -- REPLACE { NAME }, { HOSTNAME } WITH VALUES --
 
-# DOCKER INFO 
+## DOCKER INFO 
 
-## HOW TO CREATE A VOLUME
+### HOW TO CREATE A VOLUME
 
 `docker volume create my-vol`
 
-## HOW TO COPY FILE TO VOLUME
-
-### MOUNT VOLUME TO DOCKER RUN:
+###### MOUNT VOLUME TO DOCKER RUN:
 `docker run -d --platform linux/arm64 -v my-vol:/beanpi/cert`
 
-### COPY FILE TO MOUNTED VOLUME
+###### COPY FILE TO MOUNTED VOLUME
 `docker cp { FILE } { DOCKER ID }:{VOLUME PATH}`
 e.g. `docker cp certificate.pfx 38aefe611b27:/var/lib/docker/volumes/my-vol/_data`
 
-### GET DOCKER ID
+###### GET DOCKER ID
 `docker ps`
 
-### GET VOLUME PATH
+###### GET VOLUME PATH
 Inspect running container and copy mounted volume path.
 
-## HOW TO ADD ENV VARIABLES
+### HOW TO ADD ENV VARIABLES
 docker run -d --platform linux/arm64 --env-file { FILE } { CONTAINER }
 e.g. docker run -d --platform linux/arm64 --env-file ./.env incendiarybean/beanpi
 
