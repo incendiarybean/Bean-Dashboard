@@ -2,8 +2,7 @@
 
 -- REPLACE { NAME }, { HOSTNAME } WITH VALUES --
 
-https://hub.docker.com/repository/docker/incendiarybean/beanpi - Link to the Docker!
-[Docker](https://hub.docker.com/repository/docker/incendiarybean/beanpi)
+Link to the [Docker](https://hub.docker.com/repository/docker/incendiarybean/beanpi)
 
 ## DOCKER INFO 
 
