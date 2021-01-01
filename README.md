@@ -193,6 +193,10 @@ status:
   loadBalancer: {}
 ```
 
+```BASH
+microk8s kubectl create secret generic { NAME }-secure --from-file=myfile=certificate.pfx
+```
+
 # Getting Started with BeanPI
 
 ## SCRIPTS
