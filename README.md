@@ -14,7 +14,7 @@ docker cp { FILE } { DOCKER ID }:{VOLUME PATH}
 e.g. docker cp certificate.pfx 38aefe611b27:/var/lib/docker/volumes/my-vol/_data
 
 ## GET DOCKER ID
-docker ps
+###### `docker ps`
 
 ## GET VOLUME PATH
 Inspect running container and copy mounted volume path.
