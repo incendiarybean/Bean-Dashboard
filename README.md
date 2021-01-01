@@ -27,15 +27,12 @@ e.g. docker run -d --platform linux/arm64 --env-file ./.env incendiarybean/beanp
 # KUBE INFO
 
 ## CREATE SSL CERTIFICATES
-	  
-################################################
--- REPLACE { NAME }, { HOSTNAME } WITH VALUES --
-################################################
+	  -- REPLACE { NAME }, { HOSTNAME } WITH VALUES --
 
 ## GENERATE KEY & CERT
 
-### `openssl req -x509 -out { NAME }.crt -keyout { NAME }.key -newkey rsa:2048 -nodes -sha256   -subj '/CN={ HOSTNAME }' -extensions EXT -config <( \
-### `printf "[dn]\nCN={ HOSTNAME }\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:{ HOSTNAME }\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")`
+`openssl req -x509 -out { NAME }.crt -keyout { NAME }.key -newkey rsa:2048 -nodes -sha256   -subj '/CN={ HOSTNAME }' -extensions EXT -config <( \`
+`printf "[dn]\nCN={ HOSTNAME }\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:{ HOSTNAME }\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")`
 
 ## GENERATE PEM FROM CRT
 ### `openssl x509 { NAME }.crt -out { NAME }.pem -outform PEM`
