@@ -194,6 +194,7 @@ function RenderProps() {
                 for(let link in links) {
                     let item = links[link];
                     if(typeof(item) === "object"){
+                        item.classList.remove("animate__fadeIn", "animate__fadeOut");
                         if(item.classList.contains('hidden')){
                             return item.classList.toggle("hidden", false);
                         } else {
@@ -585,9 +586,9 @@ function RenderProps() {
 
         initTheme();
         getNotes();
-        // getWeather();
-        // getNews();
-        // getFriday();
+        getWeather();
+        getNews();
+        getFriday();
     }, [props.Friday.Today.Wins, props.Friday.Today.Losses]);
 
     return { props }

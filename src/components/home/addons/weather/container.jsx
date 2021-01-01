@@ -55,7 +55,7 @@ function Component(props){
                 <Provider />
             </div>
             {(props.Weather.Loaded && props.Weather.Loaded !== "Failed") ?
-                <div className="p-2 w-full h-auto flex flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row">
+                <div className="p-2 w-full h-auto flex flex-col xl:flex-row">
                     <Weather {...props} />
                     <Weekly {...props} />
                 </div>

@@ -5,18 +5,18 @@ function Nav(props) {
     
     return(
         <nav className="sticky max-h-full top-0 z-30 flex items-center justify-between flex-wrap bg-primary border-accent border-b-4 shadow-lg">
-            <div className="block lg:hidden">
+            <div className="block lg:hidden p-2">
                 <button onClick={props.Theme.menu} className="links mr-4 flex items-center px-3 py-2 border rounded text-accent border-accent hover:text-accent hover:bg-accent">
                     <svg className="fill-current stroke-current text-default h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"/></svg>
                 </button>
             </div>	
-            <div onMouseLeave={props.Theme.menu} className="text-default w-full lg:h-full block flex flex-col flex-grow lg:flex-row lg:items-center justify-between text-left lg:w-auto">
-                <div className="mx-4 linklist hidden h-full flex flex-col items-center lg:items-start lg:block text-md lg:flex-grow">
+            <div className="text-default w-full lg:h-full block flex flex-col flex-grow lg:flex-row lg:items-center justify-between text-left lg:w-auto">
+                <div className="animate__animated mx-4 linklist hidden h-full flex flex-col items-center lg:items-start lg:block text-md lg:flex-grow">
                     <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-                        <div id="links-block" className="text-md px-3 lg:px-0 lg:text-sm h-full lg:flex-grow">
+                        <div id="links-block" className="text-md pb-3 lg:pb-0 px-3 lg:px-0 lg:text-sm h-full lg:flex-grow">
                             <Link to={`/`} className="block mt-4 lg:inline-block lg:mt-0 text-default hover:text-accent mr-4">Home</Link>
                             <Link to={`/stats`} className="block mt-4 lg:inline-block lg:mt-0 text-default hover:text-accent mr-4">Friday</Link>
-                            <Link to={`/about`} className="block mt-4 lg:inline-block lg:mt-0 text-default hover:text-accent mr-4">About</Link>
+                            <a href="https://benweare.co.uk" className="block mt-4 lg:inline-block lg:mt-0 text-default hover:text-accent mr-4">About</a>
                             <a href="https://github.com/incendiarybean/BeanPi" className="block mt-4 lg:inline-block lg:mt-0 text-default hover:text-accent mr-4">Source</a>
                         </div>
                         <div id="chatbox" className="relative w-56 flex flex-col justify hidden xl:block z-2 mr-6 text-center">

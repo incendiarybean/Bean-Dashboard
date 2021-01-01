@@ -3,7 +3,7 @@ import React from 'react';
 function Component(props){
     
     return (
-        <div className="col-auto cursor-pointer hover:bg-other bg-primary border-accent border-b-4 shadow-md m-2 lg:mx-4 p-2 flex flex-col items-center lg:w-4/12 xl:w-4/12 text-center">
+        <div className="col-auto cursor-pointer hover:bg-other bg-primary border-accent border-b-4 shadow-md m-2 xl:mx-4 p-2 flex flex-col items-center xl:w-4/12 text-center">
             <div className="text-md font-bold flex flex-col text-gray-900 p-2">
                 <span className="uppercase text-title tracking-wide text-xl font-bold lg:text-xl break-words xl:text-xl leading-tight">Today</span><span className="font-normal text-accent text-sm" id="location">{props.Weather.Location}</span>
                 <span className="font-normal text-paragraph text-sm" id="date">{props.Weather.TodayWeather.date}</span>

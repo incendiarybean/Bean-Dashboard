@@ -1,6 +1,10 @@
 cert
 build
 .dockerignore
+.env
+.env.development
+.env.template
+.env.development.template
 node_modules
 Dockerfile
 Dockerfile.prod
@@ -9,3 +13,4 @@ Dockerfile.prod
 .gitignore
 package-lock.json
 README.md
+src/index.css
