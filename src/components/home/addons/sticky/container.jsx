@@ -33,14 +33,14 @@ function Component(props){
                     <Note key={data._id} {...props} data={data} />
                 ))}
                 <div className="group absolute bg-primary shadow-md rounded-full top-4 left-2 flex">
+                    <div className="transition-width duration-500 ease-in-out w-0 group-hover:w-full h-full flex">
+                        <svg className="cursor-pointer text-accent hover:text-blue-500 mt-1 ml-2 hidden group-hover:block animate__animated animate__fadeIn h-full w-full" width="32" height="32" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+                            <g className="stroke-current" fill="none" fillRule="evenodd" stroke="#9f7aea" strokeLinecap="round" strokeLinejoin="round" transform="translate(2 3)"><path d="m8 16c4.4380025 0 8-3.5262833 8-7.96428571 0-4.43800246-3.5619975-8.03571429-8-8.03571429-4.43800245 0-8 3.59771183-8 8.03571429 0 4.43800241 3.56199755 7.96428571 8 7.96428571z"/><path d="m4 8h8"/><path d="m8 12.0563492v-8.0563492z"/></g>
+                        </svg>
+                    </div>
                     <div className="p-1">
                         <svg className="cursor-pointer text-accent hover:text-blue-500 transform group-hover:rotate-180" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 21 21">
                             <g className="stroke-current" fill="none" fillRule="evenodd" stroke="#9f7aea" strokeLinecap="round" strokeLinejoin="round" transform="translate(2 2)"><circle cx="8.5" cy="8.5" r="8"/><polyline points="9.628 6.362 9.628 10.604 5.338 10.556" transform="scale(1 -1) rotate(-45 -12.997 0)"/></g>
-                        </svg>
-                    </div>
-                    <div className="transition-width duration-500 ease-in-out w-0 group-hover:w-full h-full flex">
-                        <svg className="cursor-pointer text-accent hover:text-blue-500 mt-1 hidden group-hover:block animate__animated animate__fadeIn h-full w-full" width="32" height="32" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
-                            <g className="stroke-current" fill="none" fillRule="evenodd" stroke="#9f7aea" strokeLinecap="round" strokeLinejoin="round" transform="translate(2 3)"><path d="m8 16c4.4380025 0 8-3.5262833 8-7.96428571 0-4.43800246-3.5619975-8.03571429-8-8.03571429-4.43800245 0-8 3.59771183-8 8.03571429 0 4.43800241 3.56199755 7.96428571 8 7.96428571z"/><path d="m4 8h8"/><path d="m8 12.0563492v-8.0563492z"/></g>
                         </svg>
                     </div>
                 </div>

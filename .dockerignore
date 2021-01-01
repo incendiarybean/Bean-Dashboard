@@ -1,5 +1,10 @@
 build
 .dockerignore
+node_modules
 Dockerfile
 Dockerfile.prod
 .git
+.eslintcache
+.gitignore
+package-lock.json
+README.md

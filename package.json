@@ -31,7 +31,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "",
+    "start": "yarn build && NODE_ENV=production node .",
     "start-server": "nodemon .",
     "start-dev": "react-scripts start",
     "build:css": "postcss src/App.css -o src/index.css",
@@ -40,8 +40,8 @@
     "eject": "react-scripts eject"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/incendiarybean/BeanPi.git"
+    "type": "git",
+    "url": "https://github.com/incendiarybean/BeanPi.git"
   },
   "eslintConfig": {
     "extends": [

@@ -213,7 +213,7 @@ const route = (app, serverhttp) => {
 
     // IF PROD, RUN CODE //
 
-    if(process.env.NODE_ENV === "development"){
+    if(process.env.NODE_ENV !== "development"){
 
         // SET TIMER TO AUTOMATE THE WEATHER MODULES //
         console.log(`[${time}] Weather intitialised`);
