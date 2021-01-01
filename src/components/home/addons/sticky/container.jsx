@@ -5,7 +5,7 @@ function Component(props){
 
     const Loader = (props) => {
         return (
-            <div className="shadow-inner bg-other w-full p-2 flex justify-center items-center">
+            <div className="hidden lg:flex shadow-inner bg-other w-full p-2 justify-center items-center">
                 <div  className={`-mt-20 animate__animated animate__flash animate__infinite animate__slower shadow-lg absolute w-96 rounded-lg border border-${props.color}-400`}>
                     <div className={`note relative rounded-t-lg w-full p-1 flex justify-between border-b border-${props.color}-400`}>
                         <p className={`font-semi-bold leading-wide px-2 text-${props.color}-400`}>{props.text}</p>
