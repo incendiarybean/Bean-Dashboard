@@ -4,23 +4,23 @@ module.exports = {
         "url": "https://api-metoffice.apiconnect.ibmcloud.com/metoffice/production/v0/forecasts/point/daily",
         "qs": {
             "includeLocationName": true,
-            "latitude": process.env.latitude,
-            "longitude": process.env.longitude
+            "latitude": process.env.LATITUDE,
+            "longitude": process.env.LONGITUDE
         },
         "headers": {
-            "x-ibm-client-id": process.env.client_id,
-            "x-ibm-client-secret": process.env.client_secret,
+            "x-ibm-client-id": process.env.MET_CLIENT_ID,
+            "x-ibm-client-secret": process.env.MET_API_SECRET,
             "accept": "application/json"
         }
     },
     "googleOptions" : {
-        "apiKey" : process.env.google_api_key,
-        "cx" : process.env.google_cx,
+        "apiKey" : process.env.GOOGLE_API_KEY,
+        "cx" : process.env.GOOGLE_CX,
         "num" : "10"
     },
-    "MAC": process.env.mac_address,
+    "MAC": process.env.MAC,
     "mongoDB":{
-        "host": process.env.mongo_host,
-        "port": process.env.mongo_port
+        "host": process.env.MONGO_HOST,
+        "port": process.env.MONGO_PORT
     }
 }
