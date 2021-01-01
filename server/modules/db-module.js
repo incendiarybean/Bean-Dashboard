@@ -2,7 +2,7 @@ const MongoClient = require('mongodb').MongoClient;
 const mongoDB = require("./cfg/module-config").mongoDB;
 
 const url = mongoDB.host + mongoDB.port;
-
+console.log(url)
 module.exports = {
     connect: () => {
         return new Promise((resolve, reject) => {

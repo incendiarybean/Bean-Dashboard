@@ -88,23 +88,31 @@ const route = (app, serverhttp) => {
             let date = new Date();
             switch(req.isActive){
                 case true:
-                    switch(req.params.action){
-                        case "delete":
-                            return res.json(await db_module.delete("sticky", { _id:ObjectId(req.note._id) }));
-                        case "view":
-                            return res.json(req.note);
-                        default:
-                            return res.json({ code:400, message:`${req.method} is not defined on ${req.path}`});
+                    try{
+                        switch(req.params.action){
+                            case "delete":
+                                return res.json(await db_module.delete("sticky", { _id:ObjectId(req.note._id) }));
+                            case "view":
+                                return res.json(req.note);
+                            default:
+                                return res.json({ code:400, message:`${req.method} is not defined on ${req.path}`});
+                        }
+                    } catch(e) {
+                        console.log(e)
                     }
                 case false:
                     switch(req.params.id){
                         case "create":
-                            return res.json(await db_module.insert("sticky", { "dateTime":date, "top":100, "left":100, "title":"", "content":"", "color":"blue", "showColor":"hidden" }));
+                            try{
+                                return res.json(await db_module.insert("sticky", { "dateTime":date, "top":100, "left":100, "title":"", "content":"", "color":"blue", "showColor":"hidden" }));
+                            } catch (e) {
+                                console.log(e)
+                            }
                         default:
                     }
                 default:
                     return res.json(await db_module.select("sticky"));
-            }
+            } 
         })
         .post(async (req, res) => {
             let date = new Date();

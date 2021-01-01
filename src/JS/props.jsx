@@ -4,7 +4,7 @@ import image from '../IMG/background.png';
 
 function RenderProps() {
     let timer = 0;
-    
+
     console.log(process.env);
 
     const useForceUpdate = () => {
@@ -585,9 +585,9 @@ function RenderProps() {
 
         initTheme();
         getNotes();
-        getWeather();
-        getNews();
-        getFriday();
+        // getWeather();
+        // getNews();
+        // getFriday();
     }, [props.Friday.Today.Wins, props.Friday.Today.Losses]);
 
     return { props }
