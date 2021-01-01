@@ -4,6 +4,8 @@ import image from '../IMG/background.png';
 
 function RenderProps() {
     let timer = 0;
+    
+    console.log(process.env);
 
     const useForceUpdate = () => {
         // eslint-disable-next-line

@@ -1,3 +1,57 @@
+# DOCKER INFO 
+
+## HOW TO CREATE A VOLUME
+
+docker volume create my-vol
+
+## HOW TO COPY FILE TO VOLUME
+
+## MOUNT VOLUME TO DOCKER RUN:
+docker run -d --platform linux/arm64 -v my-vol:/beanpi/cert
+
+## COPY FILE TO MOUNTED VOLUME
+docker cp { FILE } { DOCKER ID }:{VOLUME PATH}
+e.g. docker cp certificate.pfx 38aefe611b27:/var/lib/docker/volumes/my-vol/_data
+
+## GET DOCKER ID
+docker ps
+
+## GET VOLUME PATH
+Inspect running container and copy mounted volume path.
+
+## HOW TO ADD ENV VARIABLES
+docker run -d --platform linux/arm64 --env-file { FILE } { CONTAINER }
+e.g. docker run -d --platform linux/arm64 --env-file ./.env incendiarybean/beanpi
+
+
+# KUBE INFO
+
+## CREATE SSL CERTIFICATES
+	  
+################################################
+-- REPLACE { NAME }, { HOSTNAME } WITH VALUES --
+################################################
+
+## GENERATE KEY & CERT
+
+### `openssl req -x509 -out { NAME }.crt -keyout { NAME }.key -newkey rsa:2048 -nodes -sha256   -subj '/CN={ HOSTNAME }' -extensions EXT -config <( \
+### `printf "[dn]\nCN={ HOSTNAME }\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:{ HOSTNAME }\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")`
+
+## GENERATE PEM FROM CRT
+### `openssl x509 { NAME }.crt -out { NAME }.pem -outform PEM`
+
+## GENERATE PFX FROM CRT & KEY
+### `openssl pkcs12 -export -out certificate.pfx -inkey { NAME }.key -in { NAME }.crt`
+
+### TRUSTING CERTIFICATES FOR SSL
+1. Copy CRT from above steps to local PC.
+2. Open Certificate Manager.
+3. Open TRUSTED CA FOLDER.
+4. Right click => All Tasks => Import => Select the CRT and accept.
+5. CA is now trusted and pages using that cert will now be VALID.
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
