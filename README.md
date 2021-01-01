@@ -2,14 +2,22 @@
 
 -- REPLACE { NAME }, { HOSTNAME } WITH VALUES --
 
+https://hub.docker.com/repository/docker/incendiarybean/beanpi - Link to the Docker!
+[Docker](https://hub.docker.com/repository/docker/incendiarybean/beanpi)
+
 ## DOCKER INFO 
 
 ### HOW TO CREATE A VOLUME
 
-`docker volume create my-vol`
+```
+docker volume create my-vol
+```
 
 ###### MOUNT VOLUME TO DOCKER RUN:
-`docker run -d --platform linux/arm64 -v my-vol:/beanpi/cert`
+
+```
+docker run -d --platform linux/arm64 -v my-vol:/beanpi/cert
+```
 
 ###### COPY FILE TO MOUNTED VOLUME
 `docker cp { FILE } { DOCKER ID }:{VOLUME PATH}`
@@ -22,25 +30,33 @@ e.g. `docker cp certificate.pfx 38aefe611b27:/var/lib/docker/volumes/my-vol/_dat
 Inspect running container and copy mounted volume path.
 
 ### HOW TO ADD ENV VARIABLES
+```
 docker run -d --platform linux/arm64 --env-file { FILE } { CONTAINER }
+```
 e.g. docker run -d --platform linux/arm64 --env-file ./.env incendiarybean/beanpi
-
 
 ## KUBERNETE INFO
 
 ### CREATE SSL CERTIFICATES
 
-
 ###### GENERATE KEY & CERT
 
-`openssl req -x509 -out { NAME }.crt -keyout { NAME }.key -newkey rsa:2048 -nodes -sha256   -subj '/CN={ HOSTNAME }' -extensions EXT -config <( \`
-`printf "[dn]\nCN={ HOSTNAME }\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:{ HOSTNAME }\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")`
+```BASH
+openssl req -x509 -out { NAME }.crt -keyout { NAME }.key -newkey rsa:2048 -nodes -sha256   -subj '/CN={ HOSTNAME }' -extensions EXT -config <( \
+printf "[dn]\nCN={ HOSTNAME }\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:{ HOSTNAME }\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+```
 
 ###### GENERATE PEM FROM CRT
-`openssl x509 { NAME }.crt -out { NAME }.pem -outform PEM`
+
+```BASH
+openssl x509 { NAME }.crt -out { NAME }.pem -outform PEM
+```
 
 ###### GENERATE PFX FROM CRT & KEY
-`openssl pkcs12 -export -out certificate.pfx -inkey { NAME }.key -in { NAME }.crt`
+
+```BASH
+openssl pkcs12 -export -out certificate.pfx -inkey { NAME }.key -in { NAME }.crt
+```
 
 ### TRUSTING CERTIFICATES FOR SSL
 1. Copy CRT from above steps to local PC.
@@ -49,28 +65,155 @@ e.g. docker run -d --platform linux/arm64 --env-file ./.env incendiarybean/beanp
 4. Right click => All Tasks => Import => Select the CRT and accept.
 5. CA is now trusted and pages using that cert will now be VALID.
 
+### DEPLOYING TO KUBERNETES
 
+###### CONFIG MAP
 
-# Getting Started with Create React App
+Create new Config Map in Config and Storage > Config Maps.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+```JSON
+{
+	"GOOGLE_API_KEY": "{ KEYS }",
+	"GOOGLE_CX": "{ KEYS }",
+	"LATITUDE": "{ KEYS }",
+	"LONGITUDE": "{ KEYS }",
+	"MAC": "{ KEYS }",
+	"MET_API_SECRET": "{ KEYS }",
+	"MET_CLIENT_ID": "{ KEYS }",
+	"MONGO_HOST": "{ KEYS }",
+	"MONGO_PORT": "{ KEYS }",
+	"PFX_KEY": "{ KEYS }",
+	"REACT_APP_HOST": "{ KEYS }"
+}
+```
 
-## Available Scripts
+###### CREATE DEPLOYMENT
+
+```YAML
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: { NAME }
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: { NAME }
+  template:
+    metadata:
+      labels:
+        app: { NAME }
+    spec:
+      volumes:
+      - name: secret-volume
+        secret:
+          secretName: mysecret
+      containers:
+      - name: { NAME }
+        image: incendiarybean/beanpi:latest
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: secret-volume
+          mountPath: "/{ NAME }/cert"
+        env:
+        - name: GOOGLE_API_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: GOOGLE_API_KEY
+        - name: GOOGLE_CX
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: GOOGLE_CX
+        - name: LATITUDE
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: LATITUDE
+        - name: LONGITUDE
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: LONGITUDE
+        - name: MAC
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: MAC
+        - name: MET_API_SECRET
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: MET_API_SECRET
+        - name: MET_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: MET_CLIENT_ID
+        - name: MONGO_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: MONGO_HOST
+        - name: MONGO_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: MONGO_PORT
+        - name: PFX_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: PFX_KEY
+        - name: REACT_APP_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: REACT_APP_HOST
+              
+```
+
+###### CREATE LOAD BALANCED SERVICE
+
+```YAML
+apiVersion: v1
+kind: Service
+metadata:
+  name: beanpi
+spec:
+  selector:
+    app: beanpi
+  ports:
+    - port: 443
+      targetPort: 8080
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+status:
+  loadBalancer: {}
+```
+
+# Getting Started with BeanPI
+
+## SCRIPTS
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm run start-dev`
 
 Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Open [https://localhost:3000](https://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `npm test`
+### `npm run start-server`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Runs the server API in development mode.\
+This will only launch the API, and will be accessible via the PORT defined.
+
+This uses NODEMON to hot-reload the server, this will crash with issues and relaunch when fixed.
 
 ### `npm run build`
 
@@ -82,42 +225,21 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### `npm run build:css`
+Builds the index.css file from the app.css file.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+This relies on POSTCSS, POSTCSS-CLI & Tailwind:
+    -   tailwind.config.js
+    -   postcss.config.js
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### ENV FILES
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+###### .env.template
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+This is the server's process.env variable allocation.
 
-## Learn More
+This only uses the PFX, fill out with the PFX password from above processes.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+###### .env.development.template
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This is the client's process.env variable allocation.
