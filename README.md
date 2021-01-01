@@ -26,23 +26,23 @@ docker run -d --platform linux/arm64 --env-file { FILE } { CONTAINER }
 e.g. docker run -d --platform linux/arm64 --env-file ./.env incendiarybean/beanpi
 
 
-# KUBERNETE INFO
+## KUBERNETE INFO
 
-## CREATE SSL CERTIFICATES
+### CREATE SSL CERTIFICATES
 
 
-### GENERATE KEY & CERT
+###### GENERATE KEY & CERT
 
 `openssl req -x509 -out { NAME }.crt -keyout { NAME }.key -newkey rsa:2048 -nodes -sha256   -subj '/CN={ HOSTNAME }' -extensions EXT -config <( \`
 `printf "[dn]\nCN={ HOSTNAME }\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:{ HOSTNAME }\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")`
 
-### GENERATE PEM FROM CRT
+###### GENERATE PEM FROM CRT
 `openssl x509 { NAME }.crt -out { NAME }.pem -outform PEM`
 
-### GENERATE PFX FROM CRT & KEY
+###### GENERATE PFX FROM CRT & KEY
 `openssl pkcs12 -export -out certificate.pfx -inkey { NAME }.key -in { NAME }.crt`
 
-## TRUSTING CERTIFICATES FOR SSL
+### TRUSTING CERTIFICATES FOR SSL
 1. Copy CRT from above steps to local PC.
 2. Open Certificate Manager.
 3. Open TRUSTED CA FOLDER.
