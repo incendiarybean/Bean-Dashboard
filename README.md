@@ -35,10 +35,10 @@ e.g. docker run -d --platform linux/arm64 --env-file ./.env incendiarybean/beanp
 `printf "[dn]\nCN={ HOSTNAME }\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:{ HOSTNAME }\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")`
 
 ## GENERATE PEM FROM CRT
-### `openssl x509 { NAME }.crt -out { NAME }.pem -outform PEM`
+###### `openssl x509 { NAME }.crt -out { NAME }.pem -outform PEM`
 
 ## GENERATE PFX FROM CRT & KEY
-### `openssl pkcs12 -export -out certificate.pfx -inkey { NAME }.key -in { NAME }.crt`
+###### `openssl pkcs12 -export -out certificate.pfx -inkey { NAME }.key -in { NAME }.crt`
 
 ### TRUSTING CERTIFICATES FOR SSL
 1. Copy CRT from above steps to local PC.
