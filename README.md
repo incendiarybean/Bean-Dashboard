@@ -14,7 +14,44 @@ Use the following link to sign up to the Google.
 Fill out all the details.
 Write down the API key and CX.
 
+# HOW TO SET UP DEV ENVIRONMENTS 
+
+-- REPLACE { } WITH VALUES --
+
+## DOCKER INFO 
+
+Link to the [Docker](https://hub.docker.com/repository/docker/incendiarybean/beanpi)
+
+### HOW TO CREATE A VOLUME
+
+```
+docker volume create my-vol
+```
+
+###### MOUNT VOLUME TO DOCKER RUN:
+
+```
+docker run -d --platform linux/arm64 -v my-vol:/beanpi/cert
+```
+
+###### COPY FILE TO MOUNTED VOLUME
+`docker cp { FILE } { DOCKER ID }:{VOLUME PATH}`
+e.g. `docker cp certificate.pfx 38aefe611b27:/var/lib/docker/volumes/my-vol/_data`
+
+###### GET DOCKER ID
+`docker ps`
+
+###### GET VOLUME PATH
+Inspect running container and copy mounted volume path.
+
+### HOW TO ADD ENV VARIABLES
+```
+docker run -d --platform linux/arm64 --env-file { FILE } { CONTAINER }
+```
+e.g. docker run -d --platform linux/arm64 --env-file ./.env incendiarybean/beanpi
+
 ## Kubernetes/MicroK8s (UBUNTU LATEST)
+
 ###### Install via BASH
 ```BASH
     sudo snap install micr0k8s --classic
@@ -92,44 +129,6 @@ microk8s kubectl -n kube-system describe secret $token
 ```
 3. Mark file as executable.
 4. Run file, copy printed token.
-
-# HOW TO SET UP DEV ENVIRONMENTS 
-
--- REPLACE { NAME }, { HOSTNAME } WITH VALUES --
-
-Link to the [Docker](https://hub.docker.com/repository/docker/incendiarybean/beanpi)
-
-## DOCKER INFO 
-
-### HOW TO CREATE A VOLUME
-
-```
-docker volume create my-vol
-```
-
-###### MOUNT VOLUME TO DOCKER RUN:
-
-```
-docker run -d --platform linux/arm64 -v my-vol:/beanpi/cert
-```
-
-###### COPY FILE TO MOUNTED VOLUME
-`docker cp { FILE } { DOCKER ID }:{VOLUME PATH}`
-e.g. `docker cp certificate.pfx 38aefe611b27:/var/lib/docker/volumes/my-vol/_data`
-
-###### GET DOCKER ID
-`docker ps`
-
-###### GET VOLUME PATH
-Inspect running container and copy mounted volume path.
-
-### HOW TO ADD ENV VARIABLES
-```
-docker run -d --platform linux/arm64 --env-file { FILE } { CONTAINER }
-```
-e.g. docker run -d --platform linux/arm64 --env-file ./.env incendiarybean/beanpi
-
-## KUBERNETE INFO
 
 ### CREATE SSL CERTIFICATES
 
