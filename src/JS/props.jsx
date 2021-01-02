@@ -5,7 +5,7 @@ import image from '../IMG/background.png';
 function RenderProps() {
     let timer = 0;
 
-    console.log(process.env);
+    if(process.env.NODE_ENV === "development") console.log(process.env);
 
     const useForceUpdate = () => {
         // eslint-disable-next-line
@@ -565,7 +565,6 @@ function RenderProps() {
             fetch(`https://${process.env.REACT_APP_HOST}/friday/today`)
             .then(data => data.json())
             .then(data => {
-                console.log(data)
                 setFriday(data.response);
                 data.response.map(data => {
                     setDates(Dates => [...Dates, data.date]);
