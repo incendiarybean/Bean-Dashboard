@@ -14,6 +14,62 @@ Use the following link to sign up to the Google.
 Fill out all the details.
 Write down the API key and CX.
 
+## Kubernetes/MicroK8s (UBUNTU LATEST)
+###### Install via BASH
+```BASH
+    sudo snap install micr0k8s --classic
+```
+###### Add user to Microk8s group
+```Bash
+    sudo usermod -a -G microk8s { USERNAME }
+```
+
+`(Logout and back in)`
+
+###### Enable MicroK8s features
+```BASH
+    microk8s enable dns metallb ingress dashboard
+```
+`MetalLB will ask you to provide an IP range, do this on your own subnet e.g 192.168.1.`
+`Use a range like 192.168.1.0-192.168.1.50`
+
+###### Create a start_proxy.sh file
+```Bash
+    nano start_proxy.sh
+```
+
+###### Paste this into the file
+```Bash
+    {
+            microk8s dashboard-proxy &
+            echo "Success enabling dashboard proxy"
+    } || {
+            echo "There was an issue launching the proxy"
+    }
+
+    {
+            iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 443 -j REDIRECT --to-port 10443
+            echo "Success routing 443 to 10443"
+    } || {
+            echo "There was an issue forwarding to port 10443"
+    }
+```
+
+###### Open your browser and access the Dashboard via { IP }:10443 (Get IP Below)
+```Bash
+    ip r
+```
+1. Click the namespaces dropdown.
+2. Choose kube-system
+3. Click Services
+4. Click dots next to kubernetes-dashboard
+5. Find line type: ClusterIP
+6. Replace ClusterIP with LoadBalancer
+7. Wait for it to refresh with an External IP.
+
+`You will now have access to the Dashboard at any time from https://{ EXTERNAL IP }.`
+`When deploying new configs, you can just click the plus in the top right and paste the config.`
+
 # HOW TO SET UP DEV ENVIRONMENTS 
 
 -- REPLACE { NAME }, { HOSTNAME } WITH VALUES --
