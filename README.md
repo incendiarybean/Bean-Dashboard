@@ -65,20 +65,33 @@ Write down the API key and CX.
     sudo ./start_proxy.sh
 ```
 
-###### Open your browser and access the Dashboard via { IP }:10443 (Get IP Below)
+###### If you don't know your Device's IP, use the below
 ```Bash
     ip r
 ```
-1. Click the namespaces dropdown.
-2. Choose kube-system
-3. Click Services
-4. Click dots next to kubernetes-dashboard
-5. Find line type: ClusterIP
-6. Replace ClusterIP with LoadBalancer
-7. Wait for it to refresh with an External IP.
+###### Open your browser and access the Dashboard via { IP }:10443
+1. Copy the pasted key output from start_proxy.sh and paste into login page.
+2. Click the namespaces dropdown.
+3. Choose kube-system
+4. Click Services
+5. Click dots next to kubernetes-dashboard
+6. Find line type: ClusterIP
+7. Replace ClusterIP with LoadBalancer
+8. Wait for it to refresh with an External IP.
 
 `You will now have access to the Dashboard at any time from https://{ EXTERNAL IP } (Without start_proxy.sh).`
 `When deploying new configs, you can just click the plus in the top right and paste the config.`
+
+###### Get login Key without start_proxy
+1. Create a new file, e.g. kube-key.sh
+2. Paste this:
+```BASH
+#! /bin/bash
+token=$(microk8s kubectl -n kube-system get secret | grep default-token | cut -d " " -f1)
+microk8s kubectl -n kube-system describe secret $token
+```
+3. Mark file as executable.
+4. Run file, copy printed token.
 
 # HOW TO SET UP DEV ENVIRONMENTS 
 
