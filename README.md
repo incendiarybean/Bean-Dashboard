@@ -1,3 +1,7 @@
+Current Application Interface:
+
+![Image of Interface](https://benweare.co.uk/img/tempsnip.png)
+
 # Requirements
 
 ## MetOffice API Keys
@@ -14,11 +18,11 @@ Use the following link to sign up to the Google.
 Fill out all the details.
 Write down the API key and CX.
 
-# HOW TO SET UP DEV ENVIRONMENTS 
+# HOW TO SET UP DEV ENVIRONMENTS
 
 -- REPLACE { } WITH VALUES --
 
-## DOCKER INFO 
+## DOCKER INFO
 
 Link to the [Docker](https://hub.docker.com/repository/docker/incendiarybean/beanpi)
 
@@ -272,7 +276,7 @@ spec:
             configMapKeyRef:
               name: config
               key: REACT_APP_HOST
-              
+
 ```
 
 ###### CREATE LOAD BALANCED SERVICE

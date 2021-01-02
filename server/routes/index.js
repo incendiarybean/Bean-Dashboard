@@ -22,9 +22,11 @@ const route = (app, serverhttp) => {
     app.use(express.static(path.join(__dirname, '../../build')))
 
     // INIT SOCKET //
-    const io = require('socket.io')(serverhttp);
-    io.on('connection', (socket) => {
-        io.to(socket.id).emit('ENV', { ENV: process.env.NODE_ENV });
+    const io = require('socket.io')(serverhttp, {
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"]
+        }
     });
 
     // CREATE GOOGLE SEARCH/INTERNAL SEARCH ENDPOINTS //
@@ -45,9 +47,9 @@ const route = (app, serverhttp) => {
                 case undefined:
                     var regex = new RegExp([searchValue].join(''), 'i');
                     let s = await db_module.select('search', { 'search':regex});
-    
+
                     let g = await ext_functions.googleSearch(searchValue);
-    
+
                     if(typeof(g[Symbol.iterator]) === 'function')
                     {
                         let searchObj = [ ...s,...g];
@@ -82,7 +84,7 @@ const route = (app, serverhttp) => {
             return next();
         }
     });
-    
+
     app.route('/sticky/:id?/:action?')
         .get(async (req, res) =>{
             let date = new Date();
@@ -112,7 +114,7 @@ const route = (app, serverhttp) => {
                     }
                 default:
                     return res.json(await db_module.select('sticky'));
-            } 
+            }
         })
         .post(async (req, res) => {
             let date = new Date();
@@ -125,12 +127,12 @@ const route = (app, serverhttp) => {
                             return res.json({ code:400, message:`${req.method} is not defined on ${req.path}`});
                     }
                 case false:
-                    return res.json({ code:400, message: `ID wasn't valid.` });     
+                    return res.json({ code:400, message: `ID wasn't valid.` });
                 default:
                     return res.json({ code:400, message:`${req.method} is not defined on ${req.path}`});
             }
         });
-    
+
     app.route('/friday/:stat?')
         .get(cors(), async (req, res) => {
             let newDay = new Date().toLocaleDateString();
@@ -138,17 +140,18 @@ const route = (app, serverhttp) => {
                 case 'today':
                     return res.json(await db_module.select('friday', { date: newDay }));
                 case 'clean':
-                    return res.json(await db_module.delete('friday', { date: newDay }));
+                    return res.json(await db_module.delete('friday'));
                 default:
                     return res.json(await db_module.select('friday'));
-                
+
             }
         })
         .post(cors(), async (req, res) => {
+            io.emit('FRIDAY');
             return res.json(await ext_functions.setScore(req, res));
         });
 
-        
+
     // CREATES WEATHER ENDPOINTS FOR DAILY AND HOURLY //
 
     app.route('/weather/:date')
@@ -167,11 +170,11 @@ const route = (app, serverhttp) => {
                         }
                         return res.json(response);
                     default:
-                        return res.json({ code:400, message:`${req.method} is not defined on ${req.path}`})      
-                }   
+                        return res.json({ code:400, message:`${req.method} is not defined on ${req.path}`})
+                }
             } catch (e) {
                 return res.json({ code:502, message:e })
-            }                     
+            }
         });
 
 
@@ -201,7 +204,7 @@ const route = (app, serverhttp) => {
             }
 
         });
-    
+
     // INITIALISE BASIC INTERACTION POINTS //
     app.route('/')
         .get((req, res) => {
@@ -217,7 +220,7 @@ const route = (app, serverhttp) => {
         .post((req,res) => {
             return res.json({ code:400, message:`${req.method} is not defined on ${req.path}`});
         });
-        
+
 
     // IF PROD, RUN CODE //
 
@@ -230,16 +233,16 @@ const route = (app, serverhttp) => {
                 io.emit('WEATHER');
             }).catch(e => {
                 io.emit('FAILED', { message:e.message });
-            });  
+            });
             setInterval(() => {
                 ext_functions.getWeather().then(data => {
                     io.emit('WEATHER');
                 }).catch(e => {
                     io.emit('FAILED', { message:e.message });
-                });   
+                });
             }, 620000);
         });
-        
+
 
         // CHECKS FOR VALID NEWS //
 
@@ -249,7 +252,7 @@ const route = (app, serverhttp) => {
                 io.emit('NEWS');
             }).catch(e => {
                 io.emit('FAILED', { message:e.message });
-            });  
+            });
             setInterval(() => {
                 ext_functions.getNews().then(data => {
                     io.emit('NEWS');

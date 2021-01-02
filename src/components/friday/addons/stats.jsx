@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Chart } from 'chart.js';
 
 function Component(props){
-
     useEffect(() => {
         if(props.Friday.Loaded){
             const Render = () => {
@@ -45,7 +44,7 @@ function Component(props){
             };
             Render();
         }
-    }, [props.Friday.Loaded, props.Friday.Wins, props.Friday.Losses, props.Friday.Today.Wins, props.Friday.Today.Losses]);
+    }, [ props.Friday.Today.Wins, props.Friday.Today.Losses ]);
 
     return (
         <div className='shadow-inner bg-other'>

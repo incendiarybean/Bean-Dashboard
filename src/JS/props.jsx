@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import image from '../IMG/background.png';
 
-function RenderProps() {
+if(process.env.NODE_ENV === 'development') console.log(process.env);
+
+function RenderProps(io) {
     let timer = 0;
 
-    if(process.env.NODE_ENV === 'development') console.log(process.env);
-
-    const useForceUpdate = () => {
+    const useForceUpdate = (io) => {
         // eslint-disable-next-line
         const [value, setValue] = useState(0);
         return () => setValue(value => ++value);
@@ -527,6 +527,7 @@ function RenderProps() {
         };
 
         const getNews = async () => {
+            setArticles(Articles => []);
             fetch(`https://${process.env.REACT_APP_HOST}/news`)
             .then(data => data.json())
             .then(data => {
@@ -563,7 +564,8 @@ function RenderProps() {
         };
 
         const getFriday = () => {
-            fetch(`https://${process.env.REACT_APP_HOST}/friday/today`)
+            setFriday(Friday => []);
+            fetch(`https://${process.env.REACT_APP_HOST}/friday/`)
             .then(data => data.json())
             .then(data => {
                 setFriday(data.response);
@@ -585,12 +587,30 @@ function RenderProps() {
         };
 
         initTheme();
-        getNotes();
-        getWeather();
-        getNews();
-        getFriday();
 
-    }, [props.Friday.Today.Wins, props.Friday.Today.Losses]);
+        io.on('connect', () => {
+            getNews();
+            getWeather();
+            getNotes();
+            getFriday();
+        });
+        io.on('disconnect', () => {
+            setNewsLoaded(false);
+            setWeatherLoaded(false);
+            setNotesLoaded(false);
+            return toast.error('Server has disconnected, we\'ll reconnect when we can');
+        });
+        io.on('WEATHER', () => {
+            getWeather();
+        });
+        io.on('NEWS', () => {
+            getNews();
+        });
+        io.on('FRIDAY', () => {
+            getFriday();
+        });
+
+    }, [io]);
 
     return { props };
 
