@@ -68,25 +68,31 @@ openssl pkcs12 -export -out certificate.pfx -inkey { NAME }.key -in { NAME }.crt
 
 ###### CONFIG MAP
 
-Create new Config Map in Config and Storage > Config Maps.
+Create new Config Map using the following
 
-```JSON
-{
-	"GOOGLE_API_KEY": "{ KEYS }",
-	"GOOGLE_CX": "{ KEYS }",
-	"LATITUDE": "{ KEYS }",
-	"LONGITUDE": "{ KEYS }",
-	"MAC": "{ KEYS }",
-	"MET_API_SECRET": "{ KEYS }",
-	"MET_CLIENT_ID": "{ KEYS }",
-	"MONGO_HOST": "{ KEYS }",
-	"MONGO_PORT": "{ KEYS }",
-	"PFX_KEY": "{ KEYS }",
-	"REACT_APP_HOST": "{ KEYS }"
-}
+```YAML
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: { NAME }-config
+  namespace: default
+data:
+  PFX_KEY: "{ KEY }"
+  GOOGLE_API_KEY: "{ KEY }"
+  GOOGLE_CX: "{ KEY }"
+  LATITUDE: "{ KEY }"
+  LONGITUDE: "{ KEY }"
+  MAC: "{ KEY }"
+  MET_API_SECRET: "{ KEY }"
+  MET_CLIENT_ID: "{ KEY }"
+  MONGO_HOST: "{ KEY }"
+  MONGO_PORT: "{ KEY }"
+  REACT_APP_HOST: "{ KEY }"
 ```
 
 ###### CREATE DEPLOYMENT
+
+Create new deployment using the following
 
 ```YAML
 apiVersion: apps/v1
@@ -176,6 +182,8 @@ spec:
 
 ###### CREATE LOAD BALANCED SERVICE
 
+Create new service using the following
+
 ```YAML
 apiVersion: v1
 kind: Service
@@ -194,6 +202,9 @@ status:
 ```
 
 ###### CREATE SECRET FOR STORING PFX
+
+Create new Secret using the following
+
 ```BASH
 microk8s kubectl create secret generic { NAME }-secure --from-file={ PFX NAME }.pfx={ PFX NAME }.pfx
 ```
