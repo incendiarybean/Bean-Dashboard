@@ -104,9 +104,9 @@ spec:
         app: { NAME }
     spec:
       volumes:
-      - name: secret-volume
+      - name: { NAME }-secure
         secret:
-          secretName: mysecret
+          secretName: { PFX NAME }.pfx
       containers:
       - name: { NAME }
         image: incendiarybean/beanpi:latest
@@ -193,8 +193,9 @@ status:
   loadBalancer: {}
 ```
 
+###### CREATE SECRET FOR STORING PFX
 ```BASH
-microk8s kubectl create secret generic { NAME }-secure --from-file=myfile=certificate.pfx
+microk8s kubectl create secret generic { NAME }-secure --from-file={ PFX NAME }.pfx={ PFX NAME }.pfx
 ```
 
 # Getting Started with BeanPI
