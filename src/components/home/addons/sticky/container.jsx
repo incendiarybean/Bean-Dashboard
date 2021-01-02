@@ -28,7 +28,7 @@ function Component(props){
         return <Loader {...{color:'red', text:'Failed...'}}/>;
     } else {
         return (
-            <div style={{ backgroundImage: `url('${props.Theme.background}')` }} id='notes_container' onDoubleClick={(e) => props.Notes.createNote(e)} className='animate__animated animate__fadeIn relative bg-blue-500 shadow-inner hidden lg:block w-full h-full'>
+            <div style={{ backgroundImage: `url('${props.Theme.background}')` }} id='notes_container' onDoubleClick={(e) => props.Notes.createNote(e)} className='notes-container animate__animated animate__fadeIn relative bg-blue-500 shadow-inner hidden lg:block w-full h-full'>
                 {props.Notes.Note.map((data) => (
                     <Note key={data._id} {...props} data={data} />
                 ))}

@@ -487,11 +487,12 @@ function RenderProps(io) {
         };
 
         const getWeather = async () => {
+            setTodayWeather(TodayWeather => []);
+            setDailyWeather(DailyWeather => []);
             fetch(`https://${process.env.REACT_APP_HOST}/weather/daily`)
             .then(data => data.json())
             .then(data => {
                 setLocation(data.location);
-                let buffer = [];
                 data.response.features[0].properties.timeSeries.map( async data => {
                     data.Day = setDate(data.time);
                     data.MaxTemp = `${Math.round(data.dayMaxScreenTemperature)}º`;
@@ -504,9 +505,8 @@ function RenderProps(io) {
                     if (new Date(data.time).toDateString() === new Date().toDateString()) {
                         setTodayWeather(data);
                     }
-                    return buffer.push(data);
+                    return setDailyWeather(DailyWeather => [...DailyWeather, data]);
                 });
-                setDailyWeather(buffer);
                 setWeatherLoaded(true);
             })
             .catch(e => {
@@ -600,14 +600,19 @@ function RenderProps(io) {
             setNotesLoaded(false);
             return toast.error('Server has disconnected, we\'ll reconnect when we can');
         });
-        io.on('WEATHER', () => {
-            getWeather();
-        });
         io.on('NEWS', () => {
+            setNewsLoaded(false);
             getNews();
         });
         io.on('FRIDAY', () => {
             getFriday();
+        });
+        io.on('WEATHER', () => {
+            setWeatherLoaded(false);
+            getWeather();
+        });
+        io.on('STICKY', () => {
+            getNotes();
         });
 
     }, [io]);

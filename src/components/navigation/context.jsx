@@ -2,37 +2,35 @@ import React, { useEffect , useState} from 'react';
 
 const Menu = (props) => {
 
-    const [x, setX] = useState('0px');
-    const [y, setY] = useState('0px');
-    const [target, setTarget] = useState('0px');
-    const [link, setLink] = useState('');
-    const [copy, setCopy] = useState(false);
-    const [menu, setMenu] = useState(false);
+    const [X, setX] = useState('0px');
+    const [Y, setY] = useState('0px');
+    const [Target, setTarget] = useState('');
+    const [TargetEl, setTargetEl] = useState('');
+    const [Link, setLink] = useState('');
+    const [CopyFN, setCopy] = useState(false);
+    const [PasteFN, setPaste] = useState(false);
+    const [MenuFN, setMenu] = useState(false);
 
     const openMenu = (e) => {
         e.preventDefault();
         setX(`${e.pageX}px`);
         setY(`${e.pageY}px`);
         setMenu(true);
-        switch(e.target.parentNode.closest('div').classList.contains('note')){
-            case true:
-                return setTarget('note');
+        switch(e.target.id){
+            case 'notes_container':
+                return setTarget('notes_container');
+            case 'articles_container':
+                return setTarget('article');
             default:
-                switch(e.target.closest('a')){
-                    case true:
-                        switch(e.target.closest('a').classList.contains('article')){
-                            case true:
-                                setLink(e.target.closest('a'));
-                                return setTarget('article');
-                            default:
-                                return setTarget(e.target.id);
-                        }
-                    default:
-                        return false;
+                if(e.target.parentNode.closest('div').classList.contains('note')){
+                    setTargetEl(e.target.closest('div'));
+                    return setTarget('note');
                 }
+                else setLink(e.target.parentNode.closest('a'));
         }
     };
     const closeMenu = () => {
+        setTarget('');
         return setMenu(false);
     };
     const highlight = (e) => {
@@ -41,11 +39,29 @@ const Menu = (props) => {
         else return setCopy(false);
     };
     const getText = (e) => {
+        e.preventDefault();
         let text = (window.getSelection) ? window.getSelection().toString() : document.selection.createRange().text;
-        if(text.length > 0) return navigator.clipboard.writeText(text);
+        if(text.length > 0){
+            navigator.clipboard.writeText(text);
+            return setPaste(true);
+        }
+    };
+    const getPaste = (e) => {
+        e.preventDefault();
+        navigator.clipboard.readText().then(data => {
+            let item = TargetEl;
+            if(item.id !== 'note_content') item = item.querySelector('#note_content');
+            item.focus();
+            let caret = window.getSelection();
+            let text = item.innerHTML;
+            let toPaste = data;
+            let position = caret.focusOffset;
+            let output = [text.slice(0, position), toPaste, text.slice(position)].join('');
+            item.innerHTML = output;
+        });
     };
     const copyLink = () => {
-        return navigator.clipboard.writeText(link.href);
+        return navigator.clipboard.writeText(Link.href);
     };
 
     useEffect(() => {
@@ -59,7 +75,7 @@ const Menu = (props) => {
     });
 
     const Menu = () => {
-        switch(target){
+        switch(Target){
             case 'notes_container':
                 return (
                     <div>
@@ -80,16 +96,20 @@ const Menu = (props) => {
                     </div>
                 );
             default:
-                return false;
+                return (
+                    <div>
+                        <p onClick={copyLink} className='cursor-pointer block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200'>Copy Link</p>
+                    </div>
+                );
         }
     };
 
     const Copy = () => {
-        switch(copy){
+        switch(CopyFN){
             case true:
                 return (
                     <div>
-                        <p onClick={getText} className='block px-4 py-2 text-sm text-gray-600 border-b hover:bg-gray-200'>Copy</p>
+                        <p onMouseDown={getText} className='cursor-pointer block px-4 py-2 text-sm text-gray-600 border-b hover:bg-gray-200'>Copy</p>
                     </div>
                 );
             default:
@@ -101,11 +121,29 @@ const Menu = (props) => {
         }
     };
 
-    if (menu) {
+    const Paste = () => {
+        switch(PasteFN){
+            case true:
+                return (
+                    <div>
+                        <p onMouseDown={getPaste} className='cursor-pointer block px-4 py-2 text-sm text-gray-600 border-b hover:bg-gray-200'>Paste</p>
+                    </div>
+                );
+            default:
+                return (
+                    <div>
+                        <p className='disabled block px-4 py-2 text-sm text-gray-400 border-b bg-gray-100'>Paste</p>
+                    </div>
+                );
+        }
+    };
+
+    if (MenuFN) {
         return(
-            <div className='absolute right-0 mt-2 w-48 bg-white rounded overflow-hidden shadow-xl z-20' style={{ top: y, left: x }}>
-                <Copy copy={copy} />
-                <Menu target={target} />
+            <div className='absolute right-0 mt-2 w-48 bg-white rounded overflow-hidden shadow-xl z-20' style={{ top: Y, left: X }}>
+                <Copy {...CopyFN} />
+                <Paste {...PasteFN} />
+                <Menu {...Target} />
             </div>
         );
 

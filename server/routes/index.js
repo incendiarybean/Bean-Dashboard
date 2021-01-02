@@ -29,6 +29,12 @@ const route = (app, serverhttp) => {
         }
     });
 
+    app.get('/refresh', (req, res) => {
+        io.emit("NEWS");
+        io.emit("WEATHER");
+        return res.json({code:200, message:"Refresh initiated"})
+    })
+
     // CREATE GOOGLE SEARCH/INTERNAL SEARCH ENDPOINTS //
 
     app.route('/search/:item?')
@@ -93,7 +99,8 @@ const route = (app, serverhttp) => {
                     try{
                         switch(req.params.action){
                             case 'delete':
-                                return res.json(await db_module.delete('sticky', { _id:ObjectId(req.note._id) }));
+                                res.json(await db_module.delete('sticky', { _id:ObjectId(req.note._id) }));
+                                return io.emit('STICKY');
                             case 'view':
                                 return res.json(req.note);
                             default:
@@ -122,7 +129,8 @@ const route = (app, serverhttp) => {
                 case true:
                     switch(req.params.action){
                         case 'update':
-                            return res.json(await db_module.replace('sticky', { 'dateTime':date, 'top':req.body.top, 'left':req.body.left, 'title':req.body.title, 'content':req.body.content, 'color':req.body.color, 'showColor':'hidden' }, { _id:ObjectId(req.note._id) }));
+                            res.json(await db_module.replace('sticky', { 'dateTime':date, 'top':req.body.top, 'left':req.body.left, 'title':req.body.title, 'content':req.body.content, 'color':req.body.color, 'showColor':'hidden' }, { _id:ObjectId(req.note._id) }));
+                            return io.emit('STICKY');
                         default:
                             return res.json({ code:400, message:`${req.method} is not defined on ${req.path}`});
                     }

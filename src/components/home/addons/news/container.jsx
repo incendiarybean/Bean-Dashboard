@@ -54,9 +54,9 @@ function Component(props){
                 </div>
                 <Provider />
             </div>
-            {(props.News.Loaded) ?
+            {(props.News.Articles.length > 0 && props.Weather.Loaded !== 'Failed') ?
                 <div className='w-full h-auto max-h-full overflow-visible xl:overflow-x-auto'>
-                    <div className='w-full sm:h-full xl:w-screen flex flex-col xl:flex-row px-4 mb-4'>
+                    <div id='articles_container' className='articles w-full sm:h-full xl:w-screen flex flex-col xl:flex-row px-4 mb-4'>
                         {props.News.Articles.map((data) => (
                             <Article key={data.title} {...props} data={data} />
                         ))}
