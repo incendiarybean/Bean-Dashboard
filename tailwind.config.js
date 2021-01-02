@@ -7,9 +7,10 @@ module.exports = {
         content: [
         ".public/index.html",
         "./src/components/*.jsx",
-        "./src/JS/*.js",
-        "./src/JS/cfg/*.json",
-        "./node_modules/@incendiarybean/notify-framework/public/*.js"
+        "./src/components/*/*.jsx",
+        "./src/components/*/*/*.jsx",
+        "./src/components/*/*/*/*.jsx",
+        "./src/JS/*.jsx",
         ],
         options: {
         whitelist: [
