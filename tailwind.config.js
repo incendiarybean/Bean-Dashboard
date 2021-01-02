@@ -88,5 +88,6 @@ module.exports = {
         fill: ['responsive', 'hover', 'focus', 'active'],
         backgroundColor: ['responsive', 'hover', 'focus', 'active', 'group-hover'],
         animation: ['hover', 'focus'],
+        zIndex: ['hover', 'active', 'focus', 'group-focus', 'focus-within'],
     }
 }
