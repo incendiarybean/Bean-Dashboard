@@ -55,6 +55,16 @@ Write down the API key and CX.
     }
 ```
 
+###### Mark file as executable
+```Bash
+    sudo chmod -x start_proxy.sh
+```
+
+###### Run file
+```Bash
+    sudo ./start_proxy.sh
+```
+
 ###### Open your browser and access the Dashboard via { IP }:10443 (Get IP Below)
 ```Bash
     ip r
@@ -67,7 +77,7 @@ Write down the API key and CX.
 6. Replace ClusterIP with LoadBalancer
 7. Wait for it to refresh with an External IP.
 
-`You will now have access to the Dashboard at any time from https://{ EXTERNAL IP }.`
+`You will now have access to the Dashboard at any time from https://{ EXTERNAL IP } (Without start_proxy.sh).`
 `When deploying new configs, you can just click the plus in the top right and paste the config.`
 
 # HOW TO SET UP DEV ENVIRONMENTS 
