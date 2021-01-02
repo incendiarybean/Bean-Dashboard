@@ -25,14 +25,15 @@ Link to the [Docker](https://hub.docker.com/repository/docker/incendiarybean/bea
 ### HOW TO CREATE A VOLUME
 
 ```
-docker volume create my-vol
+    docker volume create my-vol
 ```
 
 ###### MOUNT VOLUME TO DOCKER RUN:
 
 ```
-docker run -d --platform linux/arm64 -v my-vol:/beanpi/cert
+    docker run -d --platform linux/arm64 -v my-vol:/{ APP FOLDER NAME }/ { MOUNTPOINT }
 ```
+e.g. `docker run -d --platform linux/arm64 -v my-vol:/beanpi/cert`
 
 ###### COPY FILE TO MOUNTED VOLUME
 `docker cp { FILE } { DOCKER ID }:{VOLUME PATH}`
@@ -46,9 +47,9 @@ Inspect running container and copy mounted volume path.
 
 ### HOW TO ADD ENV VARIABLES
 ```
-docker run -d --platform linux/arm64 --env-file { FILE } { CONTAINER }
+    docker run -d --platform linux/arm64 --env-file { FILE } { CONTAINER }
 ```
-e.g. docker run -d --platform linux/arm64 --env-file ./.env incendiarybean/beanpi
+`e.g. docker run -d --platform linux/arm64 --env-file ./.env incendiarybean/beanpi`
 
 ## Kubernetes/MicroK8s (UBUNTU LATEST)
 
@@ -135,20 +136,20 @@ microk8s kubectl -n kube-system describe secret $token
 ###### GENERATE KEY & CERT
 
 ```BASH
-openssl req -x509 -out { NAME }.crt -keyout { NAME }.key -newkey rsa:2048 -nodes -sha256   -subj '/CN={ HOSTNAME }' -extensions EXT -config <( \
-printf "[dn]\nCN={ HOSTNAME }\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:{ HOSTNAME }\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+    openssl req -x509 -out { NAME }.crt -keyout { NAME }.key -newkey rsa:2048 -nodes -sha256   -subj '/CN={ HOSTNAME }' -extensions EXT -config <( \
+    printf "[dn]\nCN={ HOSTNAME }\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:{ HOSTNAME }\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
 ```
 
 ###### GENERATE PEM FROM CRT
 
 ```BASH
-openssl x509 { NAME }.crt -out { NAME }.pem -outform PEM
+    openssl x509 { NAME }.crt -out { NAME }.pem -outform PEM
 ```
 
 ###### GENERATE PFX FROM CRT & KEY
 
 ```BASH
-openssl pkcs12 -export -out certificate.pfx -inkey { NAME }.key -in { NAME }.crt
+    openssl pkcs12 -export -out certificate.pfx -inkey { NAME }.key -in { NAME }.crt
 ```
 
 ### TRUSTING CERTIFICATES FOR SSL
@@ -300,7 +301,7 @@ status:
 Create new Secret using the following
 
 ```BASH
-microk8s kubectl create secret generic { NAME }-secure --from-file={ PFX NAME }.pfx={ PFX NAME }.pfx
+    microk8s kubectl create secret generic { NAME }-secure --from-file={ PFX NAME }.pfx={ PFX NAME }.pfx
 ```
 
 # Getting Started with BeanPI
