@@ -9,7 +9,7 @@ const routes = require('./routes/index.js').route;
 
 const p = 8080;
 
-process.env.NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV:"development";
+process.env.NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV:'development';
 console.log(`[${time}] ENV: ${process.env.NODE_ENV}`);
 
 const serverhttp = require('https')

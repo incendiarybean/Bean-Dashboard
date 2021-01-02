@@ -1,9 +1,9 @@
 var wol = require('node-wol');
-let config = require("./cfg/module-config");
+let config = require('./cfg/module-config');
 let db_module = require('./db-module');
-const request = require("request");
-const fetch = require("node-fetch");
-const HTMLparser = require("node-html-parser");
+const request = require('request');
+const fetch = require('node-fetch');
+const HTMLparser = require('node-html-parser');
 
 module.exports = {
     pc_on: ()=>{
@@ -11,12 +11,12 @@ module.exports = {
             try{
                 let mac_config = config.MAC;
                 wol.wake(mac_config, function(error) {
-                    if(error) return reject({code:502, message:"Failed to boot."});
-                    return resolve({ code:200, message:"Power Request Sent" });
+                    if(error) return reject({code:502, message:'Failed to boot.'});
+                    return resolve({ code:200, message:'Power Request Sent' });
                 });
             } catch (e) {
                 console.log(e);
-                return reject({code:400, message:"Couldn't access PC power module"});
+                return reject({code:400, message:'Couldn\'t access PC power module'});
             }       
         });
     },
@@ -27,16 +27,16 @@ module.exports = {
             request(weather_config, async (error, response, body) => {
                 if (error) return reject({ code:400, message:error });
                 body = JSON.parse(body);
-                if(body.httpCode === "429"){
+                if(body.httpCode === '429'){
                     return reject({ code:400, message:body.httpMessage });
                 } else {
                     try{
-                        await db_module.drop("weatherDaily");
+                        await db_module.drop('weatherDaily');
                     } catch (e) {
-                        console.log("Couldn't drop Weather");
+                        console.log('Couldn\'t drop Weather');
                     }
-                    await db_module.insert("weatherDaily", { body });
-                    return resolve({ code:200, message: "Updated Weather" });
+                    await db_module.insert('weatherDaily', { body });
+                    return resolve({ code:200, message: 'Updated Weather' });
                 }
             });
         });
@@ -52,7 +52,7 @@ module.exports = {
                 })
                 .then(data => data.text())
                 .then(async (data) => {
-                    let check = await db_module.select("news");
+                    let check = await db_module.select('news');
                     let pages = [];
                     const page = HTMLparser.parse(data);
                     let links = page.querySelectorAll('.list-text-links-trending-panel');
@@ -67,15 +67,15 @@ module.exports = {
                             pages.push(scraped.toString())
                         }
                     }
-                    if (!check.response.length) return db_module.insert("news", { pages });
-                    let response = await db_module.drop("news");
+                    if (!check.response.length) return db_module.insert('news', { pages });
+                    let response = await db_module.drop('news');
                     if(response.code !== 200) return console.log(response);
-                    await db_module.insert("news", { pages });
-                    return resolve({code:200, message:"Updated news!"})
+                    await db_module.insert('news', { pages });
+                    return resolve({code:200, message:'Updated news!'})
                 });
             } catch (e) {
                 console.log(e)
-                return reject({code:404, message:"Could not retrieve News..."})
+                return reject({code:404, message:'Could not retrieve News...'})
             }
         });
     },
@@ -103,16 +103,16 @@ module.exports = {
                         wins: select[0].wins,
                         losses: select[0].losses
                     }
-                    if(req.body.type === "wins"){
-                        if(req.body.job === "+") {
+                    if(req.body.type === 'wins'){
+                        if(req.body.job === '+') {
                             insert.wins = insert.wins + 1;
                         } else {
                             insert.wins = insert.wins - 1;
                         }
                         response = await db_module.replace('friday', insert, {date: newDay});
 
-                    } else if(req.body.type === "losses") {
-                        if(req.body.job === "+"){
+                    } else if(req.body.type === 'losses') {
+                        if(req.body.job === '+'){
                             insert.losses = insert.losses + 1;
                         } else {
                             insert.losses = insert.losses - 1; 
@@ -123,7 +123,7 @@ module.exports = {
                 return resolve(response);
             } catch(e) {
                 console.log(e);
-                return reject({code:400, message:"Couldn't set score..."})
+                return reject({code:400, message:'Couldn\'t set score...'})
             }
         });
     },
@@ -148,20 +148,20 @@ module.exports = {
                         for(let i = 0; i < res.data.items.length; i++){
                             let gRes = res.data.items[i];
                             if(gRes.pagemap.cse_thumbnail !== undefined){
-                                gResult.push(JSON.parse(`{"_id": null,"search":"${encodeURIComponent(gRes.htmlTitle)}","image": "${encodeURIComponent(gRes.pagemap.cse_thumbnail[0].src)}" , "type":"search", "url": "${encodeURIComponent(gRes.formattedUrl)}"}`));
+                                gResult.push(JSON.parse(`{'_id': null,'search':'${encodeURIComponent(gRes.htmlTitle)}','image': '${encodeURIComponent(gRes.pagemap.cse_thumbnail[0].src)}' , 'type':'search', 'url': '${encodeURIComponent(gRes.formattedUrl)}'}`));
                             }else{
-                                gResult.push(JSON.parse(`{"_id": null,"search":"${encodeURIComponent(gRes.htmlTitle)}", "type":"search", "url": "${encodeURIComponent(gRes.formattedUrl)}"}`));
+                                gResult.push(JSON.parse(`{'_id': null,'search':'${encodeURIComponent(gRes.htmlTitle)}', 'type':'search', 'url': '${encodeURIComponent(gRes.formattedUrl)}'}`));
                             }
                         }
                         resolve(gResult);
                     }               
                 }
                 runSample(options).catch((e)=>{
-                    resolve(JSON.parse('{"_id":null, "search":"Google API is tired, try later.", "url":"","type":""}'));
+                    return resolve(JSON.parse({'_id':null, 'search':'Google API is tired, try later.', 'url':'','type':''}));
                 });
             } catch(e) {
                 console.log(e);
-                return reject({code:400, message:"Couldn't use the SEARCH api..."})
+                return reject({code:400, message:'Couldn\'t use the SEARCH api...'})
             }
         });
     }

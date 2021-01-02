@@ -46,8 +46,25 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
-    ]
+      "react-app/jest",
+      "eslint:recommended" 
+    ],
+    "rules": {
+
+        "quotes": [
+            "error",
+            "single",
+            {
+                "avoidEscape": true,
+                "allowTemplateLiterals": true
+            }
+        ],
+        "semi-style": ["error", "last"],
+        "semi": ["error", "always"],
+        "no-extra-semi": "error",
+        "semi-spacing": ["error", {"before": false, "after": true}],
+        "no-trailing-spaces": ["error", { "skipBlankLines": true }]
+    }
   },
   "browserslist": {
     "production": [

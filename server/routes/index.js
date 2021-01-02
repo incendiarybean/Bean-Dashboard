@@ -32,8 +32,8 @@ const route = (app, serverhttp) => {
     app.route('/search/:item?')
         .get(async (req, res) =>{
             switch(req.params.item){
-                case "mostSearched":
-                    return res.json(await db_module.select("mostSearched"));
+                case 'mostSearched':
+                    return res.json(await db_module.select('mostSearched'));
                 default:
                     return res.json({ code:400, message:`${req.method} is not defined on ${req.path}`});
             }
@@ -43,8 +43,8 @@ const route = (app, serverhttp) => {
             let addItem = req.body.addItem;
             switch(req.params.item){
                 case undefined:
-                    var regex = new RegExp([searchValue].join(""), "i");
-                    let s = await db_module.select("search", { "search":regex});
+                    var regex = new RegExp([searchValue].join(''), 'i');
+                    let s = await db_module.select('search', { 'search':regex});
     
                     let g = await ext_functions.googleSearch(searchValue);
     
@@ -56,12 +56,12 @@ const route = (app, serverhttp) => {
                         let searchObj = [ ...s, g];
                         return res.json(searchObj);
                     }
-                case "add":
-                    let existing = await db_module.select("mostSearched", { url:addItem });
+                case 'add':
+                    let existing = await db_module.select('mostSearched', { url:addItem });
                     if(!existing){
-                        return res.json(db_module.insert("mostSearched", { "url":addItem, "amountSearched": 1 }));
+                        return res.json(db_module.insert('mostSearched', { 'url':addItem, 'amountSearched': 1 }));
                     } else {
-                        return res.json(db_module.update("mostSearched", { $inc: { "amountSearched":1}}, { "url":addItem }));
+                        return res.json(db_module.update('mostSearched', { $inc: { 'amountSearched':1}}, { 'url':addItem }));
                     }
                 default:
                     return res.json({ code:400, message:`${req.method} is not defined on ${req.path}`})
@@ -69,9 +69,9 @@ const route = (app, serverhttp) => {
         });
 
     // CREATE ENDPOINTS FOR STICKY NOTE ENDPOINTS //
-    app.param("id", async (req, res, next, id) => {
+    app.param('id', async (req, res, next, id) => {
         try{
-            let note = await db_module.selectOne("sticky", {_id:ObjectId(req.params.id)});
+            let note = await db_module.selectOne('sticky', {_id:ObjectId(req.params.id)});
             if(note.response) {
                 req.isActive = true;
                 req.note = note.response;
@@ -90,9 +90,9 @@ const route = (app, serverhttp) => {
                 case true:
                     try{
                         switch(req.params.action){
-                            case "delete":
-                                return res.json(await db_module.delete("sticky", { _id:ObjectId(req.note._id) }));
-                            case "view":
+                            case 'delete':
+                                return res.json(await db_module.delete('sticky', { _id:ObjectId(req.note._id) }));
+                            case 'view':
                                 return res.json(req.note);
                             default:
                                 return res.json({ code:400, message:`${req.method} is not defined on ${req.path}`});
@@ -102,16 +102,16 @@ const route = (app, serverhttp) => {
                     }
                 case false:
                     switch(req.params.id){
-                        case "create":
+                        case 'create':
                             try{
-                                return res.json(await db_module.insert("sticky", { "dateTime":date, "top":100, "left":100, "title":"", "content":"", "color":"blue", "showColor":"hidden" }));
+                                return res.json(await db_module.insert('sticky', { 'dateTime':date, 'top':100, 'left':100, 'title':'', 'content':'', 'color':'blue', 'showColor':'hidden' }));
                             } catch (e) {
                                 console.log(e)
                             }
                         default:
                     }
                 default:
-                    return res.json(await db_module.select("sticky"));
+                    return res.json(await db_module.select('sticky'));
             } 
         })
         .post(async (req, res) => {
@@ -119,8 +119,8 @@ const route = (app, serverhttp) => {
             switch(req.isActive){
                 case true:
                     switch(req.params.action){
-                        case "update":
-                            return res.json(await db_module.replace("sticky", { "dateTime":date, "top":req.body.top, "left":req.body.left, "title":req.body.title, "content":req.body.content, "color":req.body.color, "showColor":"hidden" }, { _id:ObjectId(req.note._id) }));
+                        case 'update':
+                            return res.json(await db_module.replace('sticky', { 'dateTime':date, 'top':req.body.top, 'left':req.body.left, 'title':req.body.title, 'content':req.body.content, 'color':req.body.color, 'showColor':'hidden' }, { _id:ObjectId(req.note._id) }));
                         default:
                             return res.json({ code:400, message:`${req.method} is not defined on ${req.path}`});
                     }
@@ -135,9 +135,9 @@ const route = (app, serverhttp) => {
         .get(cors(), async (req, res) => {
             let newDay = new Date().toLocaleDateString();
             switch(req.params.stat){
-                case "today":
+                case 'today':
                     return res.json(await db_module.select('friday', { date: newDay }));
-                case "clean":
+                case 'clean':
                     return res.json(await db_module.delete('friday', { date: newDay }));
                 default:
                     return res.json(await db_module.select('friday'));
@@ -156,8 +156,8 @@ const route = (app, serverhttp) => {
             try{
                 let response;
                 switch(req.params.date){
-                    case "daily":
-                        response = await db_module.selectOne("weatherDaily");
+                    case 'daily':
+                        response = await db_module.selectOne('weatherDaily');
                         try{
                             response.location = response.response.body.features[0].properties.location.name;
                             response.days = response.response.body.features[0].properties.timeSeries;
@@ -180,7 +180,7 @@ const route = (app, serverhttp) => {
     app.route('/pc/:power')
         .get(async (req, res) =>{
             switch(req.params.power) {
-                case "on":
+                case 'on':
                     return res.json(await ext_functions.pc_on());
                 default:
                     return res.json({ code:400, message:`${req.method} is not defined on ${req.path}` })
@@ -193,11 +193,11 @@ const route = (app, serverhttp) => {
         .get(async (req, res) =>{
             let response;
             try{
-                response = await db_module.select("news");
+                response = await db_module.select('news');
                 response.response = response.response[0].pages;
                 return res.json(response);
             } catch(e) {
-                return res.json({ code:400, message:"Couldn't retrieve News." });
+                return res.json({ code:400, message:'Couldn\'t retrieve News.' });
             }
 
         });
@@ -221,7 +221,7 @@ const route = (app, serverhttp) => {
 
     // IF PROD, RUN CODE //
 
-    if(process.env.NODE_ENV !== "development"){
+    if(process.env.NODE_ENV !== 'development'){
 
         // SET TIMER TO AUTOMATE THE WEATHER MODULES //
         console.log(`[${time}] Weather intitialised`);
