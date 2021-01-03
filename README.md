@@ -5,16 +5,16 @@ Current Application Interface:
 # Requirements
 
 ## MetOffice API Keys
-Use the following link to sign up to the MetOffice API.
-[MetOffice API](https://www.metoffice.gov.uk/services/data)
+Use the following link to sign up to the
+[MetOffice API](https://www.metoffice.gov.uk/services/data).
 You will need to set up a new application, fill out all the details.
 Write down the API key and Client ID.
 
 (You will need to the longitude and latitude of your location later too)
 
 ## Google Search API Keys
-Use the following link to sign up to the Google.
-[Google API](https://developers.google.com/custom-search/v1/overview)
+Use the following link to sign up to the
+[Google API](https://developers.google.com/custom-search/v1/overview).
 Fill out all the details.
 Write down the API key and CX.
 
