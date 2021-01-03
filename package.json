@@ -1,98 +1,65 @@
 {
-  "name": "beanpi",
-  "version": "0.1.0",
-  "main": "server/index.js",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.11.8",
-    "@testing-library/react": "^11.2.2",
-    "@testing-library/user-event": "^12.6.0",
-    "animate.css": "^4.1.1",
-    "autoprefixer": "^10.1.0",
-    "chart.js": "^2.9.4",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "googleapis": "^66.0.0",
-    "mongodb": "^3.6.3",
-    "node-fetch": "^2.6.1",
-    "node-html-parser": "^2.0.1",
-    "node-wol": "^0.1.1",
-    "nodemon": "^2.0.6",
-    "postcss": "^8.2.2",
-    "postcss-cli": "^8.3.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.1",
-    "react-toastify": "^6.2.0",
-    "socket.io": "^3.0.4",
-    "socket.io-client": "^3.0.4",
-    "tailwindcss": "^2.0.2",
-    "typescript": "^4.1.3",
-    "web-vitals": "^0.2.4"
-  },
-  "scripts": {
-    "start": "yarn build && NODE_ENV=production node .",
-    "start-server": "nodemon .",
-    "start-dev": "react-scripts start",
-    "build:css": "postcss src/App.css -o src/index.css",
-    "build": "NODE_ENV=production npm run build:css &&react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/incendiarybean/BeanPi.git"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest",
-      "eslint:recommended"
-    ],
-    "rules": {
-      "quotes": [
-        "error",
-        "single",
-        {
-          "avoidEscape": true,
-          "allowTemplateLiterals": true
+    "name": "beanpi-app",
+    "productName": "beanpi-app",
+    "version": "1.0.0",
+    "description": "The electron app version of BeanPI",
+    "main": "public/electron.js",
+    "scripts": {
+        "start": "electron-forge start",
+        "package": "electron-forge package",
+        "make": "electron-forge make",
+        "publish": "electron-forge publish",
+        "lint": "echo \"No linting configured\""
+    },
+    "keywords": [],
+    "author": {
+        "name": "incendiarybean",
+        "email": "ben.weare12@gmail.com"
+    },
+    "license": "MIT",
+    "config": {
+        "forge": {
+        "packagerConfig": {},
+        "makers": [
+            {
+            "name": "@electron-forge/maker-squirrel",
+            "config": {
+                "name": "beanpi_app"
+            }
+            },
+            {
+            "name": "@electron-forge/maker-zip",
+            "platforms": [
+                "darwin"
+            ]
+            },
+            {
+            "name": "@electron-forge/maker-deb",
+            "config": {}
+            },
+            {
+            "name": "@electron-forge/maker-rpm",
+            "config": {}
+            }
+        ]
         }
-      ],
-      "semi-style": [
-        "error",
-        "last"
-      ],
-      "semi": [
-        "error",
-        "always"
-      ],
-      "no-extra-semi": "error",
-      "semi-spacing": [
-        "error",
-        {
-          "before": false,
-          "after": true
-        }
-      ],
-      "no-trailing-spaces": [
-        "error",
-        {
-          "skipBlankLines": true
-        }
-      ]
+    },
+    "dependencies": {
+        "electron-squirrel-startup": "^1.0.0"
+    },
+    "devDependencies": {
+        "@electron-forge/cli": "^6.0.0-beta.54",
+        "@electron-forge/maker-deb": "^6.0.0-beta.54",
+        "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+        "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+        "@electron-forge/maker-zip": "^6.0.0-beta.54",
+        "electron": "11.1.1"
+    },
+    "build": {
+        "appId": "nonExistentID",
+        "files": [
+        "build/**/*",
+        "node_modules/**/*"
+        ]
     }
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
 }
