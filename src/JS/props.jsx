@@ -238,15 +238,23 @@ function RenderProps(io) {
                 forceUpdate();
             },
             showColor: (note) => {
-                switch(note.showColor){
-                    case 'block':
-                        note.showColor = 'hidden';
-                    break;
-                    default:
-                        note.showColor = 'block';
-                    break;
-                }
-                forceUpdate();
+                let new_notes_arr = [];
+                props.Notes.Note.map(data => {
+                    if(data._id === note._id){
+                        switch(data.showColor){
+                            case 'block':
+                                data.showColor = 'hidden';
+                            break;
+                            default:
+                                data.showColor = 'block';
+                            break;
+                        }
+                        new_notes_arr.push(data);
+                    } else {
+                        new_notes_arr.push(data);
+                    }
+                });
+                return setNote(new_notes_arr);
             },
             logChange: (e, note) => {
                 e.persist();
@@ -608,11 +616,8 @@ function RenderProps(io) {
             getFriday();
         });
         io.on('WEATHER', () => {
-            setWeatherLoaded(false);
+            setNewsLoaded(false);
             getWeather();
-        });
-        io.on('STICKY', () => {
-            getNotes();
         });
 
     }, [io]);
