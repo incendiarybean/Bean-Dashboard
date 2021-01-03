@@ -4,12 +4,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Nav, Main, Context, Friday } from './components';
 import RenderProps from './JS/props';
-import connection from './JS/socket';
+import socket from './JS/socket';
 
-const io = connection();
 
 function App() {
-    let functions = RenderProps(io);
+    let functions = RenderProps(socket);
     const props = functions.props;
 
     return (

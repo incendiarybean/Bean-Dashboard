@@ -4,10 +4,10 @@ import image from '../IMG/background.png';
 
 if(process.env.NODE_ENV === 'development') console.log(process.env);
 
-function RenderProps(io) {
+function RenderProps(socket) {
     let timer = 0;
 
-    const useForceUpdate = (io) => {
+    const useForceUpdate = () => {
         // eslint-disable-next-line
         const [value, setValue] = useState(0);
         return () => setValue(value => ++value);
@@ -249,9 +249,9 @@ function RenderProps(io) {
                                 data.showColor = 'block';
                             break;
                         }
-                        new_notes_arr.push(data);
+                        return new_notes_arr.push(data);
                     } else {
-                        new_notes_arr.push(data);
+                        return new_notes_arr.push(data);
                     }
                 });
                 return setNote(new_notes_arr);
@@ -271,6 +271,9 @@ function RenderProps(io) {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(obj)
+                })
+                .then(() => {
+                    socket.emit('STICKY_UPDATE');
                 })
                 .catch(e => {
                     console.log(e);
@@ -596,31 +599,35 @@ function RenderProps(io) {
 
         initTheme();
 
-        io.on('connect', () => {
+        socket.on('connect', () => {
             getNews();
             getWeather();
             getNotes();
             getFriday();
         });
-        io.on('disconnect', () => {
+        socket.on('disconnect', () => {
             setNewsLoaded(false);
             setWeatherLoaded(false);
             setNotesLoaded(false);
             return toast.error('Server has disconnected, we\'ll reconnect when we can');
         });
-        io.on('NEWS', () => {
+        socket.on('NEWS', () => {
             setNewsLoaded(false);
             getNews();
         });
-        io.on('FRIDAY', () => {
+        socket.on('FRIDAY', () => {
             getFriday();
         });
-        io.on('WEATHER', () => {
+        socket.on('WEATHER', () => {
             setNewsLoaded(false);
             getWeather();
         });
+        socket.on('STICKY', () => {
+            getNotes();
+        });
 
-    }, [io]);
+
+    }, [socket]);
 
     return { props };
 
