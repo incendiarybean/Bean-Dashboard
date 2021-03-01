@@ -14,16 +14,42 @@ function Nav(props) {
                 <div className='animate__animated mx-4 linklist hidden h-full flex flex-col items-center lg:items-start lg:block text-md lg:flex-grow'>
                     <div className='w-full block flex-grow lg:flex lg:items-center lg:w-auto'>
                         <div id='links-block' className='text-md pb-3 lg:pb-0 px-3 lg:px-0 lg:text-sm h-full lg:flex-grow'>
-                            <Link to={`/`} className='block mt-4 lg:inline-block lg:mt-0 text-default hover:text-accent mr-4'>Home</Link>
-                            <Link to={`/stats`} className='block mt-4 lg:inline-block lg:mt-0 text-default hover:text-accent mr-4'>Friday</Link>
-                            <a href='https://benweare.co.uk' className='block mt-4 lg:inline-block lg:mt-0 text-default hover:text-accent mr-4'>About</a>
-                            <a href='https://github.com/incendiarybean/BeanPi' className='block mt-4 lg:inline-block lg:mt-0 text-default hover:text-accent mr-4'>Source</a>
+                            <Link to={`/`} className='bg-other rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-default hover:bg-accent mr-4'>Home</Link>
+                            <Link to={`/stats`} className='bg-other rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-default hover:bg-accent mr-4'>Friday</Link>
+                            <Link to={`/sandstorm`} className='bg-other rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-default hover:bg-accent mr-4'>Sandstorm Randomizer</Link>
+                            <a href='https://benweare.co.uk' className='bg-other rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-default hover:bg-accent mr-4'>About</a>
+                            <a href='https://github.com/incendiarybean/BeanPi' className='bg-other rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-default hover:bg-accent mr-4'>Source</a>
                         </div>
-                        <div id='chatbox' className='relative w-56 flex flex-col justify hidden xl:block z-2 mr-6 text-center'>
-                            <div className='rounded-full shadow h-auto bg-secondary'>
-                                <svg className='search-icon absolute m-2 transform scale-150' height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg'><g className='stroke-current text-default' fill='none' fillRule='evenodd' stroke='white' strokeLinecap='round' strokeLinejoin='round'><circle className='stroke-current text-default' cx='8.5' cy='8.5' r='5'/><path d='m17.571 17.5-5.571-5.5'/></g></svg>
-                                <input id='search' className='rounded-full w-56 text-sm px-1 py-2 leading-none border rounded text-default border-default text-center focus:text-left bg-primary bg-opacity-0 outline-none mt-4 lg:mt-0 placeholder-default' placeholder='Search' autoComplete='off' list='quick-search'/>
-                                <div className='absolute dropdown-content hidden w-full bg-secondary' id='quick-search'></div>
+                        <div id='chatbox' className='relative w-64 flex flex-col justify hidden xl:block z-2 mr-6 text-center'>
+                            <div className='group rounded shadow h-auto bg-secondary'>
+                                <div className="flex p-1 rounded border bg-primary w-64">
+                                    <input
+                                        onKeyDown={props.Search.Google}
+                                        onFocus={props.Search.setKeyIterator}
+                                        onBlur={props.Search.hideSearch}
+                                        id='search'
+                                        className='ml-4 placeholder-default bg-primary focus:outline-none'
+                                        placeholder='Search'
+                                        autoComplete='off'
+                                        list='quick-search'
+                                    />
+                                    <button onClick={props.Search.ButtonSearch} className="w-8 h-8 rounded bg-accent flex items-center justify-around hover:bg-other">
+                                        <svg className='search-icon transform scale-125' height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg'><g className='stroke-current text-default' fill='none' fillRule='evenodd' stroke='white' strokeLinecap='round' strokeLinejoin='round'><circle className='stroke-current text-default' cx='8.5' cy='8.5' r='5'/><path d='m17.571 17.5-5.571-5.5'/></g></svg>
+                                    </button>
+                                </div>
+                                <div className='absolute dropdown-content hidden w-full bg-secondary' id='quick-search'>
+                                {(props.Search.Results.length > 0) ?
+                                    props.Search.Results.map((data) => (
+                                        <a href={decodeURIComponent(data.url)} key={data.search}>
+                                            <div className="hover:bg-other w-full p-2">
+                                                {decodeURIComponent(data.search)}
+                                            </div>
+                                        </a>
+                                    ))
+                                    :
+                                    <div></div>
+                                }
+                                </div>
                             </div>
                         </div>
                     </div>

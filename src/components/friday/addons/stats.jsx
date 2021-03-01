@@ -44,7 +44,7 @@ function Component(props){
             };
             Render();
         }
-    }, [ props.Friday.Today.Wins, props.Friday.Today.Losses ]);
+    }, [ props, props.Friday.Wins, props.Friday.Losses ]);
 
     return (
         <div className='shadow-inner bg-other'>

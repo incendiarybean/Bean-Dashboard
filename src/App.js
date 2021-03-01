@@ -2,7 +2,7 @@ import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Nav, Main, Context, Friday } from './components';
+import { Nav, Main, Context, Friday, Sandstorm } from './components';
 import RenderProps from './JS/props';
 import socket from './JS/socket';
 
@@ -19,6 +19,9 @@ function App() {
             <Switch>
                 <Route exact path='/stats'>
                     <Friday {...props} />
+                </Route>
+                <Route exact path='/sandstorm'>
+                    <Sandstorm {...props} />
                 </Route>
                 <Route path='/'>
                     <Main {...props} />

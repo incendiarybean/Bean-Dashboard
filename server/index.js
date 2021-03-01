@@ -7,7 +7,7 @@ require('dotenv').config()
 
 const routes = require('./routes/index.js').route;
 
-const p = 8080;
+const p = 8000;
 
 process.env.NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV:'development';
 console.log(`[${time}] ENV: ${process.env.NODE_ENV}`);
@@ -17,7 +17,7 @@ const serverhttp = require('https')
     pfx: fs.readFileSync('./cert/certificate.pfx'),
     passphrase: process.env.PFX_KEY
 }, app)
-.listen(8080, (err) => {
+.listen(p, (err) => {
 	if (err) throw err;
 	console.log(`[${time}] Server is active on port: ${p}`);
 });

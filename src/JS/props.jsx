@@ -7,19 +7,12 @@ if(process.env.NODE_ENV === 'development') console.log(process.env);
 function RenderProps(socket) {
     let timer = 0;
 
-    const useForceUpdate = () => {
-        // eslint-disable-next-line
-        const [value, setValue] = useState(0);
-        return () => setValue(value => ++value);
-    };
-
-    const forceUpdate = useForceUpdate();
-
     const [WeatherLoaded, setWeatherLoaded] = useState(false);
     const [NotesLoaded, setNotesLoaded] = useState(false);
     const [ThemeLoaded, setThemeLoaded] = useState(false);
     const [NewsLoaded, setNewsLoaded] = useState(false);
     const [FridayLoaded, setFridayLoaded] = useState(false);
+    const [SandstormLoaded, setSandstormLoaded] = useState(false);
 
     const [Note, setNote] = useState([]);
     const [DailyWeather, setDailyWeather] = useState([]);
@@ -32,38 +25,11 @@ function RenderProps(socket) {
     const [Losses, setLosses] = useState([]);
     const [TodayWins, setTodayWins] = useState(0);
     const [TodayLosses, setTodayLosses] = useState(0);
+    const [Search, setSearch] = useState({});
+    const [SandstormUserCount, setSandstormUserCount] = useState([1]);
+    const [SandstormUser, setSandstormUser] = useState([]);
 
     const props = {
-        get: (url) => {
-            return new Promise((resolve, reject) => {
-                fetch(url)
-                .then(data => data.json())
-                .then(data => {
-                    return resolve(data);
-                })
-                .catch(e => {
-                    return console.log(e);
-                });
-            });
-        },
-        post: (url, body, skip) => {
-            return new Promise((resolve, reject) => {
-                fetch(url, {
-                    method:'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(body)
-                })
-                .then(data => data.json())
-                .then(data => {
-                    return resolve(data);
-                })
-                .catch(e => {
-                    return console.log(e);
-                });
-            });
-        },
         drag: (el) => {
             let child;
             let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -204,6 +170,39 @@ function RenderProps(socket) {
                 }
             }
         },
+        Search: {
+            Results: Search,
+            keyIterator: 0,
+            Google: () => {
+                props.Search.keyIterator = props.Search.keyIterator + 1;
+                if (props.Search.keyIterator > 2) {
+                    let q = document.getElementById('search').value;
+                    fetch(`https://${process.env.REACT_APP_HOST}/api/v0/search?q=${encodeURIComponent(q)}`)
+                    .then(data => data.json())
+                    .then(data => {
+                        setSearch(data);
+                        if(data.length > 0) {
+                            document.getElementById('quick-search').classList.remove('hidden');
+                        } else {
+                            document.getElementById('quick-search').classList.add('hidden');
+                        }
+                    })
+                    .catch(e => {
+                        return props.error(e);
+                    });
+                }
+            },
+            ButtonSearch: () => {
+                props.Search.keyIterator = 3;
+                props.Search.Google();
+            },
+            setKeyIterator: () => {
+                props.Search.keyIterator = 0;
+            },
+            hideSearch: () => {
+                document.getElementById('quick-search').classList.add('hidden');
+            }
+        },
         Weather: {
             DailyWeather: DailyWeather,
             TodayWeather: TodayWeather,
@@ -235,11 +234,16 @@ function RenderProps(socket) {
             color: (note, color) => {
                 note.color = color;
                 props.Notes.log(props.Notes.getTarget(note), note);
-                forceUpdate();
+                setNote(Note.map(data => {
+                    if (note._id === data._id) {
+                        data.color = note.color;
+                    }
+                    return data;
+                }));
             },
             showColor: (note) => {
                 let new_notes_arr = [];
-                props.Notes.Note.map(data => {
+                Note.map(data => {
                     if(data._id === note._id){
                         switch(data.showColor){
                             case 'block':
@@ -265,8 +269,8 @@ function RenderProps(socket) {
                 }, 2000);
             },
             log: async (obj, note) => {
-                return fetch(`https://${process.env.REACT_APP_HOST}/sticky/${note._id}/update`, {
-                    method: 'POST',
+                return fetch(`https://${process.env.REACT_APP_HOST}/api/v0/sticky/${note._id}`, {
+                    method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -284,21 +288,60 @@ function RenderProps(socket) {
                 let rect = e.target.getBoundingClientRect();
                 let x = e.clientX - rect.left - 10;
                 let y = e.clientY - rect.top - 10;
-                let id = await props.get(`https://${process.env.REACT_APP_HOST}/sticky/create`).then(data => { return data.id; });
-                let obj = await props.get(`https://${process.env.REACT_APP_HOST}/sticky/${id}/view`);
-                obj.left = x;
-                obj.top = y;
-                await props.post(`https://${process.env.REACT_APP_HOST}/sticky/${id}/update`, obj);
-                props.custom('💠 Creating new note.');
-                return setNote(Note => [...Note, obj]);
+                fetch(`https://${process.env.REACT_APP_HOST}/api/v0/sticky`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(data => data.json())
+                .then(data => {
+                    let id = data.item._id;
+                    fetch(`https://${process.env.REACT_APP_HOST}/api/v0/sticky/${id}`)
+                    .then(data => data.json())
+                    .then(data => {
+                        const note = data.item;
+                        note.left = x;
+                        note.top = y;
+                        fetch(`https://${process.env.REACT_APP_HOST}/api/v0/sticky/${id}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(note)
+                        })
+                        .then(data => data.json())
+                        .then(data => {
+                            props.custom('💠 Creating new note.');
+                            return setNote(Note => [...Note, note]);
+                        })
+                        .catch(e => {
+                            props.error(e.toString());
+                        });
+                    })
+                    .catch(e => {
+                        props.error(e.toString());
+                    });
+                })
+                .catch(e => {
+                    props.error(e.toString());
+                });
             },
             deleteNote: async (element, note) => {
                 props.custom('💠 Deleting Note!');
-                await props.get(`https://${process.env.REACT_APP_HOST}/sticky/${note._id}/delete`);
-                element.removeEventListener('dragend', element);
-                element.classList.remove('animate__fadeIn', 'animate__fadeOut');
-                element.classList.add('animate__fadeOut');
-                return true;
+                fetch(`https://${process.env.REACT_APP_HOST}/api/v0/sticky/${note._id}`, {
+                    method: 'DELETE'
+                })
+                .then(data => data.json())
+                .then(data => {
+                    props.custom('💠 Deleted Note!');
+                    element.removeEventListener('dragend', element);
+                    element.classList.remove('animate__fadeIn', 'animate__fadeOut');
+                    element.classList.add('animate__fadeOut');
+                })
+                .catch(e => {
+                    props.error('Couldn\'t delete Note!');
+                });
             }
         },
         Friday: {
@@ -308,62 +351,113 @@ function RenderProps(socket) {
                 Wins: TodayWins,
                 Losses: TodayLosses,
                 addWin: () => {
+                    setWins(Wins.map((item, index) => {
+                        if(index === Wins.length - 1){
+                            item = TodayWins + 1;
+                        }
+                        return item;
+                    }));
                     setTodayWins(TodayWins + 1);
                 },
                 removeWin: () => {
+                    setWins(Wins.map((item, index) => {
+                        if(index === Wins.length - 1){
+                            item = TodayWins - 1;
+                        }
+                        return item;
+                    }));
                     setTodayWins(TodayWins - 1);
                 },
                 addLoss: () => {
+                    setLosses(Losses.map((item, index) => {
+                        if(index === Losses.length - 1){
+                            item = TodayLosses + 1;
+                        }
+                        return item;
+                    }));
                     setTodayLosses(TodayLosses + 1);
                 },
                 removeLoss: () => {
+                    setLosses(Losses.map((item, index) => {
+                        if(index === Losses.length - 1){
+                            item = TodayLosses - 1;
+                        }
+                        return item;
+                    }));
                     setTodayLosses(TodayLosses - 1);
                 },
             },
             Dates: Dates,
             Wins: Wins,
             Losses: Losses
+        },
+        Sandstorm: {
+            Players: SandstormUserCount,
+            addPlayer: () => {
+                if(SandstormUserCount.length < 4){
+                    setSandstormUserCount([...SandstormUserCount, (SandstormUserCount.length + 1)]);
+                }
+            },
+            removePlayer: (user) => {
+                if(SandstormUserCount.length > 1){
+                    setSandstormUserCount(SandstormUserCount.filter((item, index) => user !== index));
+                }
+            },
+            generate: () => {
+                setSandstormUser(SandstormUser => SandstormUser = []);
+                SandstormUserCount.map(user => {
+                    return fetch('https://sandstorm-api.local/sandstorm/loadout')
+                    .then(data => data.json())
+                    .then(data => {
+                        data.user = user;
+                        return setSandstormUser(SandstormUser => [...SandstormUser, data]);
+                    })
+                    .catch(e => {
+                        return props.error(e);
+                    });
+                });
+            },
+            reset: () => {
+                setSandstormUser(SandstormUser => SandstormUser = []);
+                setSandstormLoaded(true);
+            },
+            Loaded: SandstormLoaded,
+            users: SandstormUser
         }
-
     };
 
     useEffect(() => {
         const weatherIcons = (weatherType, desc) => {
             let todayWeather;
-            let weatherDesc;
+            let weatherDesc = desc;
             switch(weatherType){
                 case 'cloud':
                     todayWeather = <svg height='20.315mm' viewBox='0 0 57.587 57.587' width='20.315mm' xmlns='https:////www.w3.org/2000/svg'><title/><path d='M35.272,41.085A12.292,12.292,0,1,0,23.46,25.426a8.582,8.582,0,1,0-4.854,15.659Z' fill='#b9d8e8'/></svg>;
-                    weatherDesc = desc;
                     return {todayWeather, weatherDesc};
                 case 'sun':
                     todayWeather = <svg height='20.315mm' viewBox='0 0 57.587 57.587' width='20.315mm' xmlns='https:////www.w3.org/2000/svg'><title/><circle cx='28.398' cy='28.696' fill='#f5ce42' r='16.948'/></svg>;
-                    weatherDesc = desc;
                     return {todayWeather, weatherDesc};
                 case 'rain':
                     todayWeather = <svg height='20.315mm' viewBox='0 0 57.587 57.587' width='20.315mm' xmlns='https:////www.w3.org/2000/svg'><title/><path d='M35.25,36.834A12.292,12.292,0,1,0,23.438,21.175a8.582,8.582,0,1,0-4.853,15.659Z' fill='#b9d8e8'/><g><path d='M37.208,41.516V34.454' fill='none' stroke='#83b3cb' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><path d='M26.045,47.145V43.123' fill='none' stroke='#9fa6b7' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><path d='M21.591,38.3V34.454' fill='none' stroke='#615c9a' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><line fill='none' stroke='#9fa6b7' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4' x1='30.245' x2='30.245' y1='36.76' y2='34.454'/></g></svg>;
-                    weatherDesc = desc;
                     return {todayWeather, weatherDesc};
                 case 'snow':
                     todayWeather = <svg height='20.315mm' viewBox='0 0 57.587 57.587' width='20.315mm' xmlns='https:////www.w3.org/2000/svg'><title/><path d='M33.771,35.56A12.292,12.292,0,1,0,21.959,19.9,8.582,8.582,0,1,0,17.106,35.56Z' fill='#b9d8e8'/><circle cx='19.937' cy='34.857' fill='#615c9a' r='2.132'/><circle cx='24.337' cy='43.589' fill='#007a9d' r='2.132'/><circle cx='28.738' cy='34.344' fill='#9fa6b7' r='2.132'/><circle cx='35.752' cy='39.089' fill='#83b3cb' r='2.132'/></svg>;
-                    weatherDesc = desc;
                     return {todayWeather, weatherDesc};
                 case 'thunder':
                     todayWeather = <svg height='20.315mm' viewBox='0 0 57.587 57.587' width='20.315mm' xmlns='https:////www.w3.org/2000/svg'><title/><g><path d='M35.272,35.883A12.291,12.291,0,1,0,23.46,20.224a8.582,8.582,0,1,0-4.854,15.659Z' fill='#b9d8e8'/><polygon fill='#d86837' points='31.256 28.003 22.134 38.275 27.652 38.34 25.622 46.286 35.452 35.873 29.34 35.873 31.256 28.003'/></g></svg>;
-                    weatherDesc = desc;
                     return {todayWeather, weatherDesc};
                 case 'foggy':
                     todayWeather = <svg height='20.315mm' viewBox='0 0 57.587 57.587' width='20.315mm' xmlns='https:////www.w3.org/2000/svg'><title/><g><path d='M34.734,25.161h-21' fill='none' stroke='#83b3cb' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><path d='M43.734,18.809h-21' fill='none' stroke='#b6d4e3' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><path d='M43.853,32.128H31.893' fill='none' stroke='#9fa6b7' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><path d='M34.734,38.778h-21' fill='none' stroke='#615c9a' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><line fill='none' stroke='#9fa6b7' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4' x1='24.252' x2='17.394' y1='32.124' y2='32.124'/></g></svg>;
-                    weatherDesc = desc;
                     return {todayWeather, weatherDesc};
                 case 'error':
                     todayWeather = <svg height='21' class='transform scale-150' viewBox='0 0 21 21' width='21' xmlns='https:////www.w3.org/2000/svg'><g fill='none' fill-rule='evenodd'><circle cx='10.5' cy='10.5' r='8' stroke='#2a2e3b' strokeLinecap='round' strokeLinejoin='round'/><path d='m10.5 11.5v-5' stroke='#2a2e3b' strokeLinecap='round' strokeLinejoin='round'/><circle cx='10.5' cy='14.5' fill='#2a2e3b' r='1'/></g></svg>;
                     weatherDesc = `${desc.code} : ${desc.message}`;
                     return {todayWeather, weatherDesc};
                 default:
-                return({todayWeather:'todayWeather',weatherDesc:'weatherDesc'});
+                    return({todayWeather:'todayWeather',weatherDesc:'weatherDesc'});
             }
         };
+
         const weatherCode = async (code) => {
             switch(code){
                 case 0:
@@ -432,6 +526,7 @@ function RenderProps(socket) {
                     return console.log('No handler for that response');
             }
         };
+
         const initTheme = () => {
             if(!window.localStorage.getItem('theme') || !window.localStorage.getItem('colour')){
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -500,11 +595,12 @@ function RenderProps(socket) {
         const getWeather = async () => {
             setTodayWeather(TodayWeather => []);
             setDailyWeather(DailyWeather => []);
-            fetch(`https://${process.env.REACT_APP_HOST}/weather/daily`)
+            let params = new URLSearchParams({date: 'daily'});
+            fetch(`https://${process.env.REACT_APP_HOST}/api/v0/weather?${params}`)
             .then(data => data.json())
             .then(data => {
                 setLocation(data.location);
-                data.response.features[0].properties.timeSeries.map( async data => {
+                data.items.features[0].properties.timeSeries.map( async data => {
                     data.Day = setDate(data.time);
                     data.MaxTemp = `${Math.round(data.dayMaxScreenTemperature)}º`;
                     data.LowTemp = `${Math.round(data.nightMinScreenTemperature)}º`;
@@ -521,15 +617,16 @@ function RenderProps(socket) {
                 setWeatherLoaded(true);
             })
             .catch(e => {
+                console.log(e);
                 setWeatherLoaded('Failed');
             });
         };
 
         const getNotes = async () => {
-            fetch(`https://${process.env.REACT_APP_HOST}/sticky`)
+            fetch(`https://${process.env.REACT_APP_HOST}/api/v0/sticky`)
             .then(data => data.json())
             .then(data => {
-                setNote(data.response);
+                setNote(data.items);
                 setNotesLoaded(true);
             })
             .catch(e => {
@@ -539,10 +636,10 @@ function RenderProps(socket) {
 
         const getNews = async () => {
             setArticles(Articles => []);
-            fetch(`https://${process.env.REACT_APP_HOST}/news`)
+            fetch(`https://${process.env.REACT_APP_HOST}/api/v0/news`)
             .then(data => data.json())
             .then(data => {
-                data.response.map(data => {
+                data.items.map(data => {
                     let html = data;
                     let newLink = document.createElement('p');
                     newLink.innerHTML = html;
@@ -576,23 +673,30 @@ function RenderProps(socket) {
 
         const getFriday = () => {
             setFriday(Friday => []);
-            fetch(`https://${process.env.REACT_APP_HOST}/friday/`)
+            fetch(`https://${process.env.REACT_APP_HOST}/api/v0/friday`)
             .then(data => data.json())
             .then(data => {
-                setFriday(data.response);
-                data.response.map(data => {
+                setFriday(data.items);
+
+                if(data.itemsLength === 1){
+                    data.items = [data.items];
+                }
+
+                data.items.map(data => {
                     setDates(Dates => [...Dates, data.date]);
-                    setWins(Wins => [...Wins, data.wins]);
-                    setLosses(Losses => [...Losses, data.losses]);
+                    setWins(Wins => [...Wins, data.win]);
+                    setLosses(Losses => [...Losses, data.loss]);
                     if(data.date === new Date().toLocaleDateString()) {
-                        setTodayWins(data.wins);
-                        setTodayLosses(data.losses);
+                        setTodayWins(data.win);
+                        setTodayLosses(data.loss);
                     }
                     return true;
                 });
+
                 setFridayLoaded(true);
             })
             .catch(e => {
+                console.log(e);
                 setFridayLoaded('Failed');
             });
         };
@@ -626,8 +730,7 @@ function RenderProps(socket) {
             getNotes();
         });
 
-
-    }, [socket]);
+    }, [socket, Wins]);
 
     return { props };
 
