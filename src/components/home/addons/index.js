@@ -1,3 +1,4 @@
-export {default as Weather} from './weather/container.jsx';
-export {default as Articles} from './news/container.jsx';
-export {default as Sticky} from './sticky/container.jsx';
+export {default as Weather} from './weather/';
+export {default as Articles} from './news/';
+export {default as Sticky} from './sticky/';
+export {default as Discord} from './discord/';

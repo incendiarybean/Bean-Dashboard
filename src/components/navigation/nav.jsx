@@ -33,8 +33,8 @@ function Nav(props) {
                                         autoComplete='off'
                                         list='quick-search'
                                     />
-                                    <button onClick={props.Search.ButtonSearch} className="w-8 h-8 rounded bg-accent flex items-center justify-around hover:bg-other">
-                                        <svg className='search-icon transform scale-125' height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg'><g className='stroke-current text-default' fill='none' fillRule='evenodd' stroke='white' strokeLinecap='round' strokeLinejoin='round'><circle className='stroke-current text-default' cx='8.5' cy='8.5' r='5'/><path d='m17.571 17.5-5.571-5.5'/></g></svg>
+                                    <button onClick={props.Search.ButtonSearch} className="w-8 h-8 rounded bg-accent flex items-center justify-around hover:bg-gray-700">
+                                        <svg className='search-icon transform scale-125' height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg'><g className='stroke-current text-white' fill='none' fillRule='evenodd' stroke='white' strokeLinecap='round' strokeLinejoin='round'><circle className='stroke-current text-white' cx='8.5' cy='8.5' r='5'/><path d='m17.571 17.5-5.571-5.5'/></g></svg>
                                     </button>
                                 </div>
                                 <div className='absolute dropdown-content hidden w-full bg-secondary' id='quick-search'>

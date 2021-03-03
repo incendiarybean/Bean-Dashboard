@@ -13,13 +13,13 @@ function RenderProps(socket) {
     const [NewsLoaded, setNewsLoaded] = useState(false);
     const [FridayLoaded, setFridayLoaded] = useState(false);
     const [SandstormLoaded, setSandstormLoaded] = useState(false);
+    const [DiscordLoaded, setDiscordLoaded] = useState(false);
 
     const [Note, setNote] = useState([]);
     const [DailyWeather, setDailyWeather] = useState([]);
     const [TodayWeather, setTodayWeather] = useState('');
     const [Location, setLocation] = useState('');
     const [Articles, setArticles] = useState([]);
-    const [Friday, setFriday] = useState([]);
     const [Dates, setDates] = useState([]);
     const [Wins, setWins] = useState([]);
     const [Losses, setLosses] = useState([]);
@@ -28,6 +28,7 @@ function RenderProps(socket) {
     const [Search, setSearch] = useState({});
     const [SandstormUserCount, setSandstormUserCount] = useState([1]);
     const [SandstormUser, setSandstormUser] = useState([]);
+    const [Discord, setDiscord] = useState([]);
 
     const props = {
         drag: (el) => {
@@ -345,7 +346,6 @@ function RenderProps(socket) {
             }
         },
         Friday: {
-            Friday: Friday,
             Loaded: FridayLoaded,
             Today:{
                 Wins: TodayWins,
@@ -396,11 +396,15 @@ function RenderProps(socket) {
             addPlayer: () => {
                 if(SandstormUserCount.length < 4){
                     setSandstormUserCount([...SandstormUserCount, (SandstormUserCount.length + 1)]);
+                } else {
+                    props.error('You\'ve reached the max players.');
                 }
             },
             removePlayer: (user) => {
                 if(SandstormUserCount.length > 1){
-                    setSandstormUserCount(SandstormUserCount.filter((item, index) => user !== index));
+                    setSandstormUserCount(SandstormUserCount.filter((item, index) => (SandstormUserCount.length -1) !== index));
+                } else {
+                    props.error('You need at least one player.');
                 }
             },
             generate: () => {
@@ -409,7 +413,6 @@ function RenderProps(socket) {
                     return fetch('https://sandstorm-api.local/sandstorm/loadout')
                     .then(data => data.json())
                     .then(data => {
-                        data.user = user;
                         return setSandstormUser(SandstormUser => [...SandstormUser, data]);
                     })
                     .catch(e => {
@@ -423,6 +426,10 @@ function RenderProps(socket) {
             },
             Loaded: SandstormLoaded,
             users: SandstormUser
+        },
+        Discord: {
+            Group: Discord,
+            Loaded: DiscordLoaded,
         }
     };
 
@@ -593,12 +600,12 @@ function RenderProps(socket) {
         };
 
         const getWeather = async () => {
-            setTodayWeather(TodayWeather => []);
-            setDailyWeather(DailyWeather => []);
             let params = new URLSearchParams({date: 'daily'});
             fetch(`https://${process.env.REACT_APP_HOST}/api/v0/weather?${params}`)
             .then(data => data.json())
             .then(data => {
+                setTodayWeather(TodayWeather => TodayWeather = []);
+                setDailyWeather(DailyWeather => DailyWeather = []);
                 setLocation(data.location);
                 data.items.features[0].properties.timeSeries.map( async data => {
                     data.Day = setDate(data.time);
@@ -634,11 +641,25 @@ function RenderProps(socket) {
             });
         };
 
+        const getDiscord = () => {
+            fetch(`https://${process.env.REACT_APP_HOST}/api/v0/discord/prochoice`)
+            .then(data => data.json())
+            .then(data => {
+                setDiscord(Discord => Discord = []);
+                setDiscord(Discord => [...Discord, data]);
+                setDiscordLoaded(true);
+            })
+            .catch(e => {
+                console.log(e);
+                setDiscordLoaded('Failed');
+            });
+        };
+
         const getNews = async () => {
-            setArticles(Articles => []);
             fetch(`https://${process.env.REACT_APP_HOST}/api/v0/news`)
             .then(data => data.json())
             .then(data => {
+                setArticles(Articles => Articles = []);
                 data.items.map(data => {
                     let html = data;
                     let newLink = document.createElement('p');
@@ -672,15 +693,17 @@ function RenderProps(socket) {
         };
 
         const getFriday = () => {
-            setFriday(Friday => []);
             fetch(`https://${process.env.REACT_APP_HOST}/api/v0/friday`)
             .then(data => data.json())
             .then(data => {
-                setFriday(data.items);
 
                 if(data.itemsLength === 1){
                     data.items = [data.items];
                 }
+
+                setDates(Dates => Dates = []);
+                setWins(Wins => Wins = []);
+                setLosses(Losses => Losses = []);
 
                 data.items.map(data => {
                     setDates(Dates => [...Dates, data.date]);
@@ -701,13 +724,19 @@ function RenderProps(socket) {
             });
         };
 
+        const getSandstorm = () => {
+            setSandstormLoaded(true);
+        };
+
         initTheme();
 
         socket.on('connect', () => {
+            getDiscord();
             getNews();
             getWeather();
             getNotes();
             getFriday();
+            getSandstorm();
         });
         socket.on('disconnect', () => {
             setNewsLoaded(false);
@@ -729,8 +758,12 @@ function RenderProps(socket) {
         socket.on('STICKY', () => {
             getNotes();
         });
+        socket.on('DISCORD_UPDATE_USERS', () => {
+            console.log('Updating discord');
+            getDiscord();
+        });
 
-    }, [socket, Wins]);
+    }, [socket]);
 
     return { props };
 

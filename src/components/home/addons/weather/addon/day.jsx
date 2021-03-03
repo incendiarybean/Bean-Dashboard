@@ -1,7 +1,7 @@
 import React from 'react';
 
 function Component(props){
-    
+
     return (
         <div className='overflow-hidden w-auto h-auto flex flex-col items-center p-2 cursor-pointer hover:bg-other bg-primary border-accent border-b-4 shadow-md'>
             <p className='my-2 text-xs text-default text-center'>{props.data.Day}</p>

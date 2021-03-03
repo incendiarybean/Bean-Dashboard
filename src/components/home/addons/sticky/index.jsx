@@ -1,5 +1,5 @@
 import React from 'react';
-import { default as Note } from './note';
+import { Note } from './addon';
 
 function Component(props){
 
@@ -32,15 +32,10 @@ function Component(props){
                 {props.Notes.Note.map((data) => (
                     <Note key={data._id} {...props} data={data} />
                 ))}
-                <div className='group absolute bg-primary shadow-md rounded-full top-4 left-2 flex'>
-                    <div onClick={e => props.Notes.createNote({ target: document.getElementById('notes_container') , clientX: 800, clientY:150 })} className='transition-width duration-500 ease-in-out w-0 group-hover:w-full h-full flex'>
-                        <svg className='cursor-pointer text-accent hover:text-blue-500 mt-1 ml-2 hidden group-hover:block animate__animated animate__fadeIn h-full w-full' width='32' height='32' viewBox='0 0 21 21' xmlns='http://www.w3.org/2000/svg'>
-                            <g className='stroke-current' fill='none' fillRule='evenodd' stroke='#9f7aea' strokeLinecap='round' strokeLinejoin='round' transform='translate(2 3)'><path d='m8 16c4.4380025 0 8-3.5262833 8-7.96428571 0-4.43800246-3.5619975-8.03571429-8-8.03571429-4.43800245 0-8 3.59771183-8 8.03571429 0 4.43800241 3.56199755 7.96428571 8 7.96428571z'/><path d='m4 8h8'/><path d='m8 12.0563492v-8.0563492z'/></g>
-                        </svg>
-                    </div>
-                    <div className='p-1'>
-                        <svg className='cursor-pointer text-accent hover:text-blue-500 transform group-hover:rotate-180' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 21 21'>
-                            <g className='stroke-current' fill='none' fillRule='evenodd' stroke='#9f7aea' strokeLinecap='round' strokeLinejoin='round' transform='translate(2 2)'><circle cx='8.5' cy='8.5' r='8'/><polyline points='9.628 6.362 9.628 10.604 5.338 10.556' transform='scale(1 -1) rotate(-45 -12.997 0)'/></g>
+                <div className='p-1 group absolute bg-primary border-accent border-b-4 shadow rounded-t-md top-2 left-2 flex w-auto justify-between'>
+                    <div className="transform scale-125" onClick={e => props.Notes.createNote({ target: document.getElementById('notes_container') , clientX: 800, clientY:150 })}>
+                        <svg className='transform scale-125 cursor-pointer text-accent hover:text-blue-500 animate__animated animate__fadeIn' height="21" viewBox="0 0 21 21" width="21" xmlns="http://www.w3.org/2000/svg">
+                            <g className="stroke-current" fill="none" fillRule="evenodd" stroke="#9f7aea" strokeLinecap="round" strokeLinejoin="round" transform="translate(4 4)"><path d="m10.5.5h-8c-1.1045695 0-2 .8954305-2 2v8c0 1.1045695.8954305 2 2 2h8c1.1045695 0 2-.8954305 2-2v-8c0-1.1045695-.8954305-2-2-2z" transform="matrix(0 1 -1 0 13 0)"/><path d="m6.5 3.5v6.056"/><path d="m6.5 3.5v6" transform="matrix(0 1 -1 0 13 0)"/></g>
                         </svg>
                     </div>
                 </div>

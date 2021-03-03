@@ -21,8 +21,8 @@ function Component(props){
             </div>
         </a>
     );
+
 }
 
 export default Component;
 
-       

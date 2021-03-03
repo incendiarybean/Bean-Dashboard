@@ -36,8 +36,8 @@
   },
   "scripts": {
     "start": "npm run build && NODE_ENV=production node .",
-    "start-server": "nodemon .",
-    "start-dev": "react-scripts start",
+    "start-server": "set NODE_ENV='development'&&nodemon .",
+    "start-dev": "set NODE_ENV='development'&&react-scripts start",
     "build:css": "postcss src/App.css -o src/index.css",
     "build": "NODE_ENV=production npm run build:css &&react-scripts build",
     "test": "react-scripts test",
