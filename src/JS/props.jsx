@@ -823,7 +823,6 @@ function RenderProps(socket) {
             getNotes();
         });
         socket.on('DISCORD_UPDATE_USERS', () => {
-            console.log('Updating discord');
             getDiscord();
         });
 

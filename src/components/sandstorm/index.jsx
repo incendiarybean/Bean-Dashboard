@@ -10,13 +10,13 @@ function Component(props){
     } else {
         return (
             <div className='p-10 animate__animated animate__fadeIn bg-secondary w-full h-auto'>
-                <div className="flex bg-primary border-b-4 border-accent">
+                <div className="h-auto flex bg-primary border-b-4 border-accent">
                     {props.Sandstorm.Players.map((data, index) => {
                         return (
                             <div key={index} className='p-2 flex justify-around w-full'>
                                 <div className='flex flex-col p-2'>
                                     <input id={`player-${index}`} className="border-b text-default focus:outline-none mt-4 bg-other p-2 px-4" placeholder="Who?"></input>
-                                    <div className="bg-primary p-2 mt-2 rounded">
+                                    <div className="transition-height duration-500 ease-in-out h-full bg-primary p-2 mt-2 rounded  animate__animated animate__fadeIn ">
                                         {(props.Sandstorm.users.length > 0 && props.Sandstorm.users[index]) ?
                                             Object.keys(props.Sandstorm.users[index]).map((item) => {
                                                 return <Player key={`${item}.player-${new Date()}`} {...props} data={item} index={index}/>;

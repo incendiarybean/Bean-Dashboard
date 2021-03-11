@@ -24,7 +24,8 @@ module.exports = {
             dark: { raw: "(prefers-color-scheme: dark)" }
         },
         transitionProperty: {
-            'width': 'width'
+            'width': 'width',
+            'height': 'height'
         },
         colors: {
             'primary':'var(--bg-preset-primary)',
@@ -81,6 +82,7 @@ module.exports = {
         rotate: ['active', 'group-hover'],
         display: ['responsive', 'hover', 'focus', 'group-hover'],
         width: ['responsive', 'hover', 'focus', 'group-hover'],
+        height: ['responsive', 'hover', 'focus', 'group-hover'],
         transitionDuration: ['responsive', 'hover', 'focus', 'group-hover'],
         transitionProperty: ['responsive', 'hover', 'focus', 'group-hover'],
         textAlign: ['responsive', 'hover', 'focus'],

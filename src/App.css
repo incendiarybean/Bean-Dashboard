@@ -62,10 +62,12 @@ html, body, #root, .App {
 
 .accent-purple{
     --bg-preset-accent: #9F7AEA;
+    --bg-preset-accent-light: #b39be4;
 }
 
 .accent-blue{
     --bg-preset-accent: #63B3ED;
+    --bg-preset-accent-light: #5fa0ce;
 }
 
 .accent-green{
@@ -99,6 +101,7 @@ html, body, #root, .App {
 body {
 	font-family: 'Roboto', sans-serif;
 }
+
 ::-webkit-scrollbar {
 	width: 6px;
 	height:6px;
@@ -115,12 +118,12 @@ body {
 	cursor: grabbing;
 }
 ::-webkit-scrollbar-track {
-	border-radius: 2px;
+	border-radius: 0px;
 }
 
 ::-webkit-scrollbar-thumb {
 	background: var(--bg-preset-accent);
-	border-radius: 2px;
+	border-radius: 0px;
 }
 
 .colorPicker{
