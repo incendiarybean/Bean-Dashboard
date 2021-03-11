@@ -32,6 +32,10 @@ const route = (app, serverhttp) => {
     // INIT CLIENT SOCKET FOR DISCORD //
     const IOClient = clientIO(process.env.DISCORD, { reconnect: true });
 
+    IOClient.on('connect', () => {
+        console.log(`[${new Date()}] Client connected to API SOCKET...`);
+    });
+
     IOClient.on('DISCORD_CONNECTED', (data) => {
         io.emit('DISCORD_CONNECTED', data);
     });

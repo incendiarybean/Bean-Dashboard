@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import image from '../IMG/background.png';
+import * as icons from './icons.js';
 
 if(process.env.NODE_ENV === 'development') console.log(process.env);
 
@@ -31,6 +32,68 @@ function RenderProps(socket) {
     const [Discord, setDiscord] = useState([]);
 
     const props = {
+        icons: icons,
+        Failed: () => {
+            return (
+                <div className='p-2 flex-initial'>
+                    <div className='w-full inline-flex bg-primary leading-none text-black rounded-full p-2 shadow text-sm'>
+                        <icons.Failed/>
+                        <p className='flex items-center hover:text-blue-500 underline name inline-flex px-2 text-default'>Failed.</p>
+                    </div>
+                </div>
+            );
+        },
+        Loading: (props) => {
+            return (
+                <div className='p-2 flex-initial'>
+                    <span className='w-full inline-flex bg-primary leading-none text-black rounded-full px-4 py-2 shadow text-sm' disabled=''>
+                        <icons.LoaderSmall/>
+                        <p className='flex items-center hover:text-blue-500 underline name inline-flex px-2 text-default'>Loading {props.name}...</p>
+                    </span>
+                </div>
+            );
+        },
+        Loaded: (props) => {
+            return (
+                <div className='p-2 flex-initial'>
+                    <div className='w-full inline-flex bg-primary leading-none text-black rounded-full p-2 shadow text-sm'>
+                        <icons.Info/>
+                        <p className='flex items-center hover:text-blue-500 underline name inline-flex px-2 text-default'>Provided by {props.name}.</p>
+                    </div>
+                </div>
+            );
+        },
+        Loader: (props) => {
+            return (
+                <div className='flex w-full h-full overflow-hidden'>
+                    <div className='shadow-inner bg-other w-full p-2 flex justify-center items-center'>
+                        <div  className={`-mt-20 animate__animated animate__flash animate__infinite animate__slower shadow-lg absolute w-96 rounded-lg border border-${props.color}-400`}>
+                            <div className={`note relative rounded-t-lg w-full p-1 flex justify-between border-b border-${props.color}-400`}>
+                                <p className={`font-semi-bold leading-wide px-2 text-${props.color}-400`}>{props.text}</p>
+                                <svg height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg'><circle className={`stroke-current text-${props.color}-400`} cx='10.5' cy='10.5' fill='none' r='8' stroke='#2a2e3b' strokeLinecap='round' strokeLinejoin='round'/></svg>
+                            </div>
+                            <div id='note_content' className='h-56 note p-2'>
+                                <div className={`p-2 bg-${props.color}-400 rounded mt-4`}></div>
+                                <div className={`p-2 bg-${props.color}-400 rounded mt-4 w-2/3`}></div>
+                                <div className={`p-2 bg-${props.color}-400 rounded mt-4`}></div>
+                                <div className={`p-2 bg-${props.color}-400 rounded mt-4 w-2/3`}></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        },
+        showChild: (e) => {
+            let target = e.target;
+            let trigger = false;
+            while(!trigger){
+                target = target.parentElement;
+                if(target.nodeName === 'DIV') trigger = true;
+            }
+            target.parentElement.children[1].classList.toggle('hidden');
+            target.parentElement.querySelectorAll('#up')[0].classList.toggle('hidden');
+            target.parentElement.querySelectorAll('#down')[0].classList.toggle('hidden');
+        },
         drag: (el) => {
             let child;
             let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -329,18 +392,18 @@ function RenderProps(socket) {
                 });
             },
             deleteNote: async (element, note) => {
-                props.custom('💠 Deleting Note!');
                 fetch(`https://${process.env.REACT_APP_HOST}/api/v0/sticky/${note._id}`, {
                     method: 'DELETE'
                 })
                 .then(data => data.json())
-                .then(data => {
+                .then(() => {
                     props.custom('💠 Deleted Note!');
                     element.removeEventListener('dragend', element);
                     element.classList.remove('animate__fadeIn', 'animate__fadeOut');
                     element.classList.add('animate__fadeOut');
                 })
                 .catch(e => {
+                    console.log(e.toString());
                     props.error('Couldn\'t delete Note!');
                 });
             }
@@ -439,29 +502,29 @@ function RenderProps(socket) {
             let weatherDesc = desc;
             switch(weatherType){
                 case 'cloud':
-                    todayWeather = <svg height='20.315mm' viewBox='0 0 57.587 57.587' width='20.315mm' xmlns='https:////www.w3.org/2000/svg'><title/><path d='M35.272,41.085A12.292,12.292,0,1,0,23.46,25.426a8.582,8.582,0,1,0-4.854,15.659Z' fill='#b9d8e8'/></svg>;
+                    todayWeather = <props.icons.Cloud/>;
                     return {todayWeather, weatherDesc};
                 case 'sun':
-                    todayWeather = <svg height='20.315mm' viewBox='0 0 57.587 57.587' width='20.315mm' xmlns='https:////www.w3.org/2000/svg'><title/><circle cx='28.398' cy='28.696' fill='#f5ce42' r='16.948'/></svg>;
+                    todayWeather = <props.icons.Sun/>;
                     return {todayWeather, weatherDesc};
                 case 'rain':
-                    todayWeather = <svg height='20.315mm' viewBox='0 0 57.587 57.587' width='20.315mm' xmlns='https:////www.w3.org/2000/svg'><title/><path d='M35.25,36.834A12.292,12.292,0,1,0,23.438,21.175a8.582,8.582,0,1,0-4.853,15.659Z' fill='#b9d8e8'/><g><path d='M37.208,41.516V34.454' fill='none' stroke='#83b3cb' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><path d='M26.045,47.145V43.123' fill='none' stroke='#9fa6b7' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><path d='M21.591,38.3V34.454' fill='none' stroke='#615c9a' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><line fill='none' stroke='#9fa6b7' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4' x1='30.245' x2='30.245' y1='36.76' y2='34.454'/></g></svg>;
+                    todayWeather = <props.icons.Rain/>;
                     return {todayWeather, weatherDesc};
                 case 'snow':
-                    todayWeather = <svg height='20.315mm' viewBox='0 0 57.587 57.587' width='20.315mm' xmlns='https:////www.w3.org/2000/svg'><title/><path d='M33.771,35.56A12.292,12.292,0,1,0,21.959,19.9,8.582,8.582,0,1,0,17.106,35.56Z' fill='#b9d8e8'/><circle cx='19.937' cy='34.857' fill='#615c9a' r='2.132'/><circle cx='24.337' cy='43.589' fill='#007a9d' r='2.132'/><circle cx='28.738' cy='34.344' fill='#9fa6b7' r='2.132'/><circle cx='35.752' cy='39.089' fill='#83b3cb' r='2.132'/></svg>;
+                    todayWeather = <props.icons.Snow/>;
                     return {todayWeather, weatherDesc};
                 case 'thunder':
-                    todayWeather = <svg height='20.315mm' viewBox='0 0 57.587 57.587' width='20.315mm' xmlns='https:////www.w3.org/2000/svg'><title/><g><path d='M35.272,35.883A12.291,12.291,0,1,0,23.46,20.224a8.582,8.582,0,1,0-4.854,15.659Z' fill='#b9d8e8'/><polygon fill='#d86837' points='31.256 28.003 22.134 38.275 27.652 38.34 25.622 46.286 35.452 35.873 29.34 35.873 31.256 28.003'/></g></svg>;
+                    todayWeather = <props.icons.Thunder/>;
                     return {todayWeather, weatherDesc};
                 case 'foggy':
-                    todayWeather = <svg height='20.315mm' viewBox='0 0 57.587 57.587' width='20.315mm' xmlns='https:////www.w3.org/2000/svg'><title/><g><path d='M34.734,25.161h-21' fill='none' stroke='#83b3cb' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><path d='M43.734,18.809h-21' fill='none' stroke='#b6d4e3' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><path d='M43.853,32.128H31.893' fill='none' stroke='#9fa6b7' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><path d='M34.734,38.778h-21' fill='none' stroke='#615c9a' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4'/><line fill='none' stroke='#9fa6b7' strokeLinecap='round' strokeLinejoin='round' strokeWidth='4' x1='24.252' x2='17.394' y1='32.124' y2='32.124'/></g></svg>;
+                    todayWeather = <props.icons.Foggy/>;
                     return {todayWeather, weatherDesc};
                 case 'error':
-                    todayWeather = <svg height='21' class='transform scale-150' viewBox='0 0 21 21' width='21' xmlns='https:////www.w3.org/2000/svg'><g fill='none' fill-rule='evenodd'><circle cx='10.5' cy='10.5' r='8' stroke='#2a2e3b' strokeLinecap='round' strokeLinejoin='round'/><path d='m10.5 11.5v-5' stroke='#2a2e3b' strokeLinecap='round' strokeLinejoin='round'/><circle cx='10.5' cy='14.5' fill='#2a2e3b' r='1'/></g></svg>;
+                    todayWeather = <props.icons.Error/>;
                     weatherDesc = `${desc.code} : ${desc.message}`;
                     return {todayWeather, weatherDesc};
                 default:
-                    return({todayWeather:'todayWeather',weatherDesc:'weatherDesc'});
+                    return({todayWeather:'todayWeather', weatherDesc:'weatherDesc'});
             }
         };
 
@@ -685,6 +748,7 @@ function RenderProps(socket) {
                     }
                     return true;
                 });
+
                 setNewsLoaded(true);
             })
             .catch(e => {

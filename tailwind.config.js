@@ -90,5 +90,6 @@ module.exports = {
         backgroundColor: ['responsive', 'hover', 'focus', 'active', 'group-hover'],
         animation: ['hover', 'focus'],
         zIndex: ['hover', 'active', 'focus', 'group-focus', 'focus-within'],
+        borderColor: ['hover', 'active', 'focus', 'group-focus', 'focus-within'],
     }
 }

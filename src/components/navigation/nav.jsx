@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 function Nav(props) {
 
     return(
         <nav className='sticky max-h-full top-0 z-30 flex items-center justify-between flex-wrap bg-primary border-accent border-b-4 shadow-lg'>
             <div className='block lg:hidden p-2'>
                 <button onClick={props.Theme.menu} className='links mr-4 flex items-center px-3 py-2 border rounded text-accent border-accent hover:text-accent hover:bg-accent'>
-                    <svg className='fill-current stroke-current text-default h-3 w-3' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><title>Menu</title><path d='M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z'/></svg>
+                    <props.icons.Burger/>
                 </button>
             </div>
             <div className='text-default w-full lg:h-full block flex flex-col flex-grow lg:flex-row lg:items-center justify-between text-left lg:w-auto'>
@@ -22,29 +21,36 @@ function Nav(props) {
                         </div>
                         <div id='chatbox' className='relative w-64 flex flex-col justify hidden xl:block z-2 mr-6 text-center'>
                             <div className='group rounded shadow h-auto bg-secondary'>
-                                <div className="flex p-1 rounded border bg-primary w-64">
+                                <div className="transition duration-300 group focus-within:border-accent hover:border-accent flex p-1 rounded border border-default bg-primary w-64">
                                     <input
                                         onKeyDown={props.Search.Google}
                                         onFocus={props.Search.setKeyIterator}
                                         onBlur={props.Search.hideSearch}
                                         id='search'
-                                        className='ml-4 placeholder-default bg-primary focus:outline-none'
+                                        className='transition duration-300 group ml-4 placeholder-default bg-primary focus:outline-none'
                                         placeholder='Search'
                                         autoComplete='off'
                                         list='quick-search'
                                     />
                                     <button onClick={props.Search.ButtonSearch} className="w-8 h-8 rounded bg-accent flex items-center justify-around hover:bg-gray-700">
-                                        <svg className='search-icon transform scale-125' height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg'><g className='stroke-current text-white' fill='none' fillRule='evenodd' stroke='white' strokeLinecap='round' strokeLinejoin='round'><circle className='stroke-current text-white' cx='8.5' cy='8.5' r='5'/><path d='m17.571 17.5-5.571-5.5'/></g></svg>
+                                        <props.icons.Search/>
                                     </button>
                                 </div>
-                                <div className='absolute dropdown-content hidden w-full bg-secondary' id='quick-search'>
+                                <div className='absolute dropdown-content hidden w-full bg-secondary rounded-b' id='quick-search'>
                                 {(props.Search.Results.length > 0) ?
-                                    props.Search.Results.map((data) => (
-                                        <a href={decodeURIComponent(data.url)} key={data.search}>
-                                            <div className="hover:bg-other w-full p-2">
-                                                {decodeURIComponent(data.search)}
-                                            </div>
-                                        </a>
+                                    props.Search.Results.map((data, index) => (
+                                        (index === 9) ?
+                                            <a className="rounded-b hover:bg-other" href={decodeURIComponent(data.url)} key={data.search}>
+                                                <div className="rounded-b hover:bg-other w-full p-2">
+                                                    <p dangerouslySetInnerHTML={{__html: decodeURIComponent(data.search)}}></p>
+                                                </div>
+                                            </a>
+                                            :
+                                            <a href={decodeURIComponent(data.url)} key={data.search}>
+                                                <div className="hover:bg-other w-full p-2">
+                                                    <p dangerouslySetInnerHTML={{__html: decodeURIComponent(data.search)}}></p>
+                                                </div>
+                                            </a>
                                     ))
                                     :
                                     <div></div>
@@ -58,7 +64,7 @@ function Nav(props) {
                     <div className='started p-1 text-md'>
                         <div className='text-md flex flex-row justify-between'>
                             <p>Settings</p>
-                            <svg height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg'><g className='stroke-current text-default' fill='none' fillRule='evenodd' stroke='#2a2e3b' strokeLinecap='round' strokeLinejoin='round'><path className='stroke-current text-default' d='m14.5 9v-6.5'/><path className='stroke-current text-default' d='m14.5 18.5v-4.5'/><circle className='stroke-current text-default' cx='14.5' cy='11.5' r='2.5'/><path className='stroke-current text-default' d='m6.5 5v-2.5'/><path className='stroke-current text-default' d='m6.5 18.5v-8.5'/><circle cx='6.5' cy='7.5' r='2.5'/></g></svg>
+                            <props.icons.Settings/>
                         </div>
                         <p className='lg:px-1 lg:-mt-1 lg:ml-1 text-accent text-xs'>Change your preferences.</p>
                     </div>
