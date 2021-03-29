@@ -3,9 +3,9 @@ import React from 'react';
 function Component(props){
 
     return (
-        <div className='col-span-3 xl:col-span-1 w-full h-full col-auto cursor-pointer hover:bg-other bg-primary border-accent border-b-4 shadow-md xl:mx-4 p-2 flex flex-col items-center text-center'>
-            <div className='text-md font-bold flex flex-col text-gray-900 p-2'>
-                <span className='uppercase text-title tracking-wide text-xl font-bold lg:text-xl break-words xl:text-xl leading-tight'>Today</span><span className='font-normal text-accent text-sm' id='location'>{props.Weather.Location}</span>
+        <div className='transition duration-300 ease-in-out bg-white dark:bg-coolGray-700 col-span-3 xl:col-span-1 w-full h-full col-auto cursor-pointer hover:bg-blue-100 dark:hover:bg-coolGray-800 border-accent border-b-4 shadow xl:mx-4 p-2 flex flex-col items-center text-center'>
+            <div className='text-md font-bold flex flex-col p-2'>
+                <span className='uppercase tracking-wide text-xl font-bold lg:text-xl break-words xl:text-xl leading-tight'>Today</span><span className='font-normal text-accent text-sm' id='location'>{props.Weather.Location}</span>
                 <span className='font-normal text-paragraph text-sm' id='date'>{props.Weather.TodayWeather.date}</span>
             </div>
             <div className='w-24 h-24 flex items-center justify-center border border-accent rounded-full text-accent p-4 text-5xl' id='weather-icon'>{props.Weather.TodayWeather.Icon}</div>

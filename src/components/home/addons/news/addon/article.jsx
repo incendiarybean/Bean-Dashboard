@@ -3,8 +3,8 @@ import React from 'react';
 function Component(props){
 
     return (
-        <a className='article relative shadow-lg cursor-pointer bg-primary hover:bg-other overflow-hidden border-b-4 border-accent w-full mt-4 xl:mt-0 xl:w-1/3 mr-0 md:mr-4' href={props.data.link}>
-            <img src={props.data.img} alt='People' className='w-full object-cover h-32'/>
+        <a className='group transition duration-300 ease-in-out bg-white dark:bg-coolGray-700 article relative shadow cursor-pointer bg-white dark:bg-coolGray-700 hover:bg-blue-100 dark:hover:bg-coolGray-800 overflow-hidden border-b-4 border-accent w-full mt-4 xl:mt-0 xl:w-1/3 mr-0 md:mr-4' href={props.data.link}>
+            <img src={props.data.img} alt='People' className='transition duration-300 ease-in-out group-hover:opacity-75 w-full object-cover h-32'/>
             <div className='h-48'>
                 <div className='shadow-inner p-4 min-h-24 z-10 overflow-none'>
                     <p className='text-accent font-semibold text-xs mb-1 leading-none'>News</p>

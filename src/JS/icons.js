@@ -87,7 +87,7 @@ export const Search = () => {
 
 export const Burger = () => {
     return (
-        <svg className='fill-current stroke-current text-default h-3 w-3' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
+        <svg className='fill-current stroke-current  h-3 w-3' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
             <title>Menu</title>
             <path d='M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z'/>
         </svg>
@@ -96,8 +96,8 @@ export const Burger = () => {
 
 export const Settings = () => {
     return (
-        <svg className="text-default" height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg'>
-            <g className='stroke-current' fill='none' fillRule='evenodd' stroke='#2a2e3b' strokeLinecap='round' strokeLinejoin='round'><path className='stroke-current text-default' d='m14.5 9v-6.5'/><path className='stroke-current text-default' d='m14.5 18.5v-4.5'/><circle className='stroke-current text-default' cx='14.5' cy='11.5' r='2.5'/><path className='stroke-current text-default' d='m6.5 5v-2.5'/>
+        <svg className="" height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg'>
+            <g className='stroke-current' fill='none' fillRule='evenodd' stroke='#2a2e3b' strokeLinecap='round' strokeLinejoin='round'><path className='stroke-current ' d='m14.5 9v-6.5'/><path className='stroke-current ' d='m14.5 18.5v-4.5'/><circle className='stroke-current ' cx='14.5' cy='11.5' r='2.5'/><path className='stroke-current ' d='m6.5 5v-2.5'/>
             <path className='stroke-current' d='m6.5 18.5v-8.5'/>
         <circle cx='6.5' cy='7.5' r='2.5'/></g></svg>
     );
@@ -105,7 +105,7 @@ export const Settings = () => {
 
 export const Plus = () => {
     return (
-        <svg className='text-default' height='25' viewBox='0 0 21 21' width='25' xmlns='http://www.w3.org/2000/svg'>
+        <svg className='' height='25' viewBox='0 0 21 21' width='25' xmlns='http://www.w3.org/2000/svg'>
             <g className='stroke-current' fill='none' fillRule='evenodd' stroke='#2a2e3b' strokeLinecap='round' strokeLinejoin='round' transform='translate(2 3)'>
                 <path d='m8 16c4.4380025 0 8-3.5262833 8-7.96428571 0-4.43800246-3.5619975-8.03571429-8-8.03571429-4.43800245 0-8 3.59771183-8 8.03571429 0 4.43800241 3.56199755 7.96428571 8 7.96428571z'/>
                 <path d='m4 8h8'/>
@@ -117,7 +117,7 @@ export const Plus = () => {
 
 export const Minus = () => {
     return (
-        <svg className='text-default' height='25' viewBox='0 0 21 21' width='25' xmlns='http://www.w3.org/2000/svg'>
+        <svg className='' height='25' viewBox='0 0 21 21' width='25' xmlns='http://www.w3.org/2000/svg'>
             <g className='stroke-current' fill='none' fillRule='evenodd' stroke='#2a2e3b' strokeLinecap='round' strokeLinejoin='round' transform='translate(2 3)'>
                 <path d='m8 16c4.4380025 0 8-3.5262833 8-7.96428571 0-4.43800246-3.5619975-8.03571429-8-8.03571429-4.43800245 0-8 3.59771183-8 8.03571429 0 4.43800241 3.56199755 7.96428571 8 7.96428571z'/>
                 <path d='m4 8h8'/>
@@ -137,7 +137,7 @@ export const LoaderSmall = () => {
 
 export const Failed = () => {
     return (
-        <span className='inline-flex text-default rounded-full h-6 p-1 py-2 justify-center items-center'>
+        <span className='inline-flex  rounded-full h-6 p-1 py-2 justify-center items-center'>
             <svg height='25' viewBox='0 0 21 21' width='25' xmlns='http://www.w3.org/2000/svg'>
                 <g className='stroke-current' fill='none' fillRule='evenodd'>
                     <circle className="stroke-current" cx='10.5' cy='10.5' r='8' stroke='white' strokeLinecap='round' strokeLinejoin='round'/>
@@ -151,7 +151,7 @@ export const Failed = () => {
 
 export const Info = () => {
     return (
-        <span className='inline-flex text-default rounded-full h-6 px-1 justify-center items-center'>
+        <span className='inline-flex  rounded-full h-6 px-1 justify-center items-center'>
             <svg height='25' viewBox='0 0 21 21' width='25' xmlns='http://www.w3.org/2000/svg'>
                 <g className="stroke-current" fill='none' fillRule='evenodd'>
                     <circle className="stroke-current" cx='10.5' cy='10.5' r='8' stroke='white' strokeLinecap='round' strokeLinejoin='round'/>

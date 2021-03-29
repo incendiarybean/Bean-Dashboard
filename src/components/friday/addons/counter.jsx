@@ -28,35 +28,35 @@ function Component(props){
     };
 
     return (
-        <div className='bg-secondary flex flex-col w-full h-full'>
-            <div className='p-2 flex justify-around w-full'>
+        <div className='bg-coolGray-200 dark:bg-coolGray-700 text-gray-800 dark:text-white flex flex-col w-full h-full'>
+            <div className='flex justify-around w-full'>
                 <div className='flex-1 p-2'>
-                    <h1 className='p-2 text-default font-semi-bold'>Home</h1>
-                    <hr className='w-full'/>
-                    <p id='home' className='text-center text-red-400 font-bold rounded-full bg-other shadow-md p-2 mt-2'>{props.Friday.Today.Wins}</p>
+                    <h1 className='p-2 font-semi-bold'>Home</h1>
+                    <hr className='w-full border-gray-400 dark:border-gray-100'/>
+                    <p id='home' className='text-center text-red-400 font-bold rounded-full bg-white dark:bg-coolGray-800 shadow p-2 mt-2'>{props.Friday.Today.Wins}</p>
                 </div>
                 <div className='flex-1 p-2'>
-                    <h1 className='p-2 text-default font-semi-bold'>Away</h1>
-                    <hr className='w-full'/>
-                    <p id='away' className='text-center text-red-400 font-bold rounded-full bg-other shadow-md p-2 mt-2'>{props.Friday.Today.Losses}</p>
+                    <h1 className='p-2 font-semi-bold'>Away</h1>
+                    <hr className='w-full border-gray-400 dark:border-gray-100'/>
+                    <p id='away' className='text-center text-red-400 font-bold rounded-full bg-white dark:bg-coolGray-800 shadow p-2 mt-2'>{props.Friday.Today.Losses}</p>
                 </div>
             </div>
-            <div className='p-2 flex justify-around w-full'>
+            <div className='flex justify-around w-full -mt-2'>
                 <div className='flex-1 p-2'>
-                    <hr className='w-full mb-4'/>
-                    <button onClick={e => update('win', 'add')} className='transition duration-500 ease-in-out bg-other hover:bg-green-600 rounded w-full shadow p-2 flex justify-center items-center mt-2'>
+                    <hr className='w-full mb-4 border-gray-400 dark:border-gray-100'/>
+                    <button onClick={e => update('win', 'add')} className='transition duration-500 ease-in-out bg-white dark:bg-coolGray-800  hover:bg-green-600 rounded w-full shadow p-2 flex justify-center items-center mt-2'>
                        <props.icons.Plus/>
                     </button>
-                    <button onClick={e => update('win', 'remove')} className='transition duration-500 ease-in-out bg-other hover:bg-red-600 rounded w-full shadow p-2 flex justify-center items-center mt-4'>
+                    <button onClick={e => update('win', 'remove')} className='transition duration-500 ease-in-out bg-white dark:bg-coolGray-800  hover:bg-red-600 rounded w-full shadow p-2 flex justify-center items-center mt-4'>
                         <props.icons.Minus/>
                     </button>
                 </div>
                 <div className='flex-1 p-2'>
-                    <hr className='w-full mb-4'/>
-                    <button onClick={e => update('loss', 'add')} className='transition duration-500 ease-in-out bg-other hover:bg-green-600 rounded w-full shadow p-2 flex justify-center items-center mt-2'>
+                    <hr className='w-full mb-4 border-gray-400 dark:border-gray-100'/>
+                    <button onClick={e => update('loss', 'add')} className='transition duration-500 ease-in-out bg-white dark:bg-coolGray-800 hover:bg-green-600 rounded w-full shadow p-2 flex justify-center items-center mt-2'>
                         <props.icons.Plus/>
                     </button>
-                    <button onClick={e => update('loss', 'remove')} className='transition duration-500 ease-in-out bg-other hover:bg-red-600 rounded w-full shadow p-2 flex justify-center items-center mt-4'>
+                    <button onClick={e => update('loss', 'remove')} className='transition duration-500 ease-in-out bg-white dark:bg-coolGray-800 hover:bg-red-600 rounded w-full shadow p-2 flex justify-center items-center mt-4'>
                         <props.icons.Minus/>
                     </button>
                 </div>

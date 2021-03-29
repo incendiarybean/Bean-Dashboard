@@ -36,9 +36,9 @@ function RenderProps(socket) {
         Failed: () => {
             return (
                 <div className='p-2 flex-initial'>
-                    <div className='w-full inline-flex bg-primary leading-none text-black rounded-full p-2 shadow text-sm'>
+                    <div className='w-full inline-flex text-coolGray-800 dark:text-white bg-white dark:bg-coolGray-700 leading-none rounded-full p-2 shadow text-sm'>
                         <icons.Failed/>
-                        <p className='flex items-center hover:text-blue-500 underline name inline-flex px-2 text-default'>Failed.</p>
+                        <p className='flex items-center hover:text-blue-500 underline name inline-flex px-2 '>Failed.</p>
                     </div>
                 </div>
             );
@@ -46,9 +46,9 @@ function RenderProps(socket) {
         Loading: (props) => {
             return (
                 <div className='p-2 flex-initial'>
-                    <span className='w-full inline-flex bg-primary leading-none text-black rounded-full px-4 py-2 shadow text-sm' disabled=''>
+                    <span className='w-full inline-flex text-coolGray-800 dark:text-white bg-white dark:bg-coolGray-700 leading-none rounded-full px-4 py-2 shadow text-sm' disabled=''>
                         <icons.LoaderSmall/>
-                        <p className='flex items-center hover:text-blue-500 underline name inline-flex px-2 text-default'>Loading {props.name}...</p>
+                        <p className='flex items-center hover:text-blue-500 underline name inline-flex px-2 '>Loading {props.name}...</p>
                     </span>
                 </div>
             );
@@ -56,9 +56,9 @@ function RenderProps(socket) {
         Loaded: (props) => {
             return (
                 <div className='p-2 flex-initial'>
-                    <div className='w-full inline-flex bg-primary leading-none text-black rounded-full p-2 shadow text-sm'>
+                    <div className='w-full inline-flex text-coolGray-800 dark:text-white bg-white dark:bg-coolGray-700 leading-none rounded-full p-2 shadow text-sm'>
                         <icons.Info/>
-                        <p className='flex items-center hover:text-blue-500 underline name inline-flex px-2 text-default'>Provided by {props.name}.</p>
+                        <p className='flex items-center hover:text-blue-500 underline name inline-flex px-2 '>Provided by {props.name}.</p>
                     </div>
                 </div>
             );
@@ -66,8 +66,8 @@ function RenderProps(socket) {
         Loader: (props) => {
             return (
                 <div className='flex w-full h-full overflow-hidden'>
-                    <div className='shadow-inner bg-other w-full p-2 flex justify-center items-center'>
-                        <div  className={`-mt-20 animate__animated animate__flash animate__infinite animate__slower shadow-lg absolute w-96 rounded-lg border border-${props.color}-400`}>
+                    <div className='shadow-inner bg-coolGray-700 w-full p-2 flex justify-center items-center'>
+                        <div className={`-mt-20 animate__animated animate__flash animate__infinite animate__slower shadow absolute w-96 rounded-lg border border-${props.color}-400`}>
                             <div className={`note relative rounded-t-lg w-full p-1 flex justify-between border-b border-${props.color}-400`}>
                                 <p className={`font-semi-bold leading-wide px-2 text-${props.color}-400`}>{props.text}</p>
                                 <svg height='21' viewBox='0 0 21 21' width='21' xmlns='http://www.w3.org/2000/svg'><circle className={`stroke-current text-${props.color}-400`} cx='10.5' cy='10.5' fill='none' r='8' stroke='#2a2e3b' strokeLinecap='round' strokeLinejoin='round'/></svg>
@@ -207,16 +207,16 @@ function RenderProps(socket) {
                 switch(prev){
                     case 'light':
                         window.localStorage.setItem('theme', 'dark');
-                        document.getElementById('root').classList.remove('theme-light', 'theme-dark');
-                        return document.getElementById('root').classList.add('theme-dark');
+                        document.getElementById('root').classList.remove('light', 'dark');
+                        return document.getElementById('root').classList.add('dark');
                     case 'dark':
                         window.localStorage.setItem('theme', 'light');
-                        document.getElementById('root').classList.remove('theme-light', 'theme-dark');
-                        return document.getElementById('root').classList.add('theme-light');
+                        document.getElementById('root').classList.remove('light', 'dark');
+                        return document.getElementById('root').classList.add('light');
                     default:
                         window.localStorage.setItem('theme', 'light');
-                        document.getElementById('root').classList.remove(`theme-dark`, `theme-light`);
-                        return document.getElementById('root').classList.add(`theme-light`);
+                        document.getElementById('root').classList.remove(`dark`, `light`);
+                        return document.getElementById('root').classList.add(`light`);
                 }
             },
             menu: () => {
@@ -602,17 +602,17 @@ function RenderProps(socket) {
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     window.localStorage.setItem('theme', 'dark');
                     window.localStorage.setItem('theme', 'blue');
-                    document.getElementById('root').classList.add(`theme-dark`, `accent-blue`);
+                    document.getElementById('root').classList.add(`dark`, `accent-blue`);
                     document.getElementById('toggle').checked = true;
                 } else {
                     window.localStorage.setItem('theme', 'light');
                     window.localStorage.setItem('colour', 'purple');
-                    document.getElementById('root').classList.add(`theme-light`, `accent-purple`);
+                    document.getElementById('root').classList.add(`light`, `accent-purple`);
                     document.getElementById('toggle').checked = false;
                 }
             } else {
                 let theme = window.localStorage;
-                document.getElementById('root').classList.add(`theme-${theme.theme}`);
+                document.getElementById('root').classList.add(`${theme.theme}`);
                 if(theme.colour === 'null' && theme.theme === 'light') theme.colour = 'purple';
                 if(theme.colour === 'null' && theme.theme === 'dark') theme.colour = 'blue';
                 document.getElementById('root').classList.add(`accent-${theme.colour}`);
@@ -625,9 +625,9 @@ function RenderProps(socket) {
 
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
                 const newColorScheme = e.matches ? 'dark' : 'light';
-                document.getElementById('root').classList.remove('theme-light', 'theme-dark');
+                document.getElementById('root').classList.remove('light', 'dark');
                 window.localStorage.setItem('theme', `${newColorScheme}`);
-                document.getElementById('root').classList.add(`theme-${newColorScheme}`);
+                document.getElementById('root').classList.add(`${newColorScheme}`);
             });
 
             let dropdowns = document.querySelectorAll('.started-container');

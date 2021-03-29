@@ -11,7 +11,7 @@ function Component(props){
     }, [props]);
 
     return (
-        <div drag='true' id={props.data._id} style={{'top':props.data.top, 'left':props.data.left}} className={`group z-0 focus-within:z-50 active:z-50 focus:z-50 note animate__animated animate__fadeIn shadow-lg absolute min-w-56 max-w-96 rounded-lg bg-${props.data.color}-400`}>
+        <div drag='true' id={props.data._id} style={{'top':props.data.top, 'left':props.data.left}} className={`group z-0 focus-within:z-50 active:z-50 focus:z-50 note animate__animated animate__fadeIn shadow absolute min-w-56 max-w-96 rounded-lg bg-${props.data.color}-400`}>
             <div className={`note relative cursor-grab active:cursor-grabbing bg-${props.data.color}-600 rounded-t-lg w-full p-1 flex justify-end text-${props.data.color}-600`}>
                 <props.icons.NoteColor {...props}/>
                 <props.icons.DeleteNote {...props}/>

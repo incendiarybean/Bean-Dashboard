@@ -1,17 +1,11 @@
+const colors = require('tailwindcss/colors')
+
 module.exports = {
-    future: {
-        purgeLayersByDefault: true,
-        removeDeprecatedGapUtilities: true
-    },
+    darkMode: 'class',
     purge: {
         content: [
         ".public/index.html",
-        "./src/components/*.jsx",
-        "./src/components/*/*.jsx",
-        "./src/components/*/*/*.jsx",
-        "./src/components/*/*/*/*.jsx",
-        "./src/components/*/*/*/*/*.jsx",
-        "./src/JS/*.jsx",
+        "./src/**/**/**/**/**/**/*.{jsx,js}"
         ],
         options: {
             safelist: [/^bg-/, /^text-/, /^hover:/],
@@ -19,26 +13,15 @@ module.exports = {
     },
     theme: {
         extend: {
-        screens: {
-            light: { raw: "(prefers-color-scheme: light)" },
-            dark: { raw: "(prefers-color-scheme: dark)" }
-        },
-        transitionProperty: {
-            'width': 'width',
-            'height': 'height'
-        },
-        colors: {
-            'primary':'var(--bg-preset-primary)',
-            'secondary':'var(--bg-preset-secondary)',
-            'accent':'var(--bg-preset-accent)',
-            'hover': 'var(--bg-preset-hover)',
-            'title': 'var(--bg-preset-title)',
-            'default': 'var(--bg-preset-text)',
-            'paragraph': 'var(--bg-preset-paragraph)',
-            'field': 'var(--bg-preset-field)',
-            'other': 'var(--bg-preset-other)',
-            'hint': 'var(--bg-preset-hint)',
-        },
+            colors: {
+                coolGray: colors.coolGray,
+                lightBlue: colors.lightBlue,
+                'accent':'var(--bg-preset-accent)',
+            },
+            transitionProperty: {
+                'width': 'width',
+                'height': 'height'
+            },
         },
         cursor: {
             auto: 'auto',
@@ -79,19 +62,20 @@ module.exports = {
         }
     },
     variants: {
-        rotate: ['active', 'group-hover'],
-        display: ['responsive', 'hover', 'focus', 'group-hover'],
-        width: ['responsive', 'hover', 'focus', 'group-hover'],
-        height: ['responsive', 'hover', 'focus', 'group-hover'],
-        transitionDuration: ['responsive', 'hover', 'focus', 'group-hover'],
-        transitionProperty: ['responsive', 'hover', 'focus', 'group-hover'],
-        textAlign: ['responsive', 'hover', 'focus'],
-        borderWidth: ['responsive', 'hover', 'focus'],
-        cursor: ['responsive', 'hover', 'focus', 'active'],
-        fill: ['responsive', 'hover', 'focus', 'active'],
-        backgroundColor: ['responsive', 'hover', 'focus', 'active', 'group-hover'],
-        animation: ['hover', 'focus'],
-        zIndex: ['hover', 'active', 'focus', 'group-focus', 'focus-within'],
-        borderColor: ['hover', 'active', 'focus', 'group-focus', 'focus-within'],
+        rotate: ['dark', 'active', 'group-hover'],
+        display: ['dark', 'responsive', 'hover', 'focus', 'group-hover'],
+        width: ['dark', 'responsive', 'hover', 'focus', 'group-hover'],
+        height: ['dark', 'responsive', 'hover', 'focus', 'group-hover'],
+        transitionDuration: ['dark', 'responsive', 'hover', 'focus', 'group-hover'],
+        transitionProperty: ['dark', 'responsive', 'hover', 'focus', 'group-hover'],
+        textAlign: ['dark', 'responsive', 'hover', 'focus'],
+        borderWidth: ['dark', 'responsive', 'hover', 'focus'],
+        cursor: ['dark', 'responsive', 'hover', 'focus', 'active'],
+        fill: ['dark', 'responsive', 'hover', 'focus', 'active'],
+        backgroundColor: ['dark', 'responsive', 'hover', 'focus', 'active', 'group-hover'],
+        animation: ['dark', 'hover', 'focus'],
+        zIndex: ['dark', 'hover', 'active', 'focus', 'group-focus', 'focus-within'],
+        borderColor: ['dark', 'hover', 'active', 'focus', 'group-focus', 'focus-within'],
+        shadow: ['dark', 'hover', 'active', 'focus', 'group-focus', 'focus-within'],
     }
 }

@@ -14,10 +14,10 @@ function Component(props){
     };
 
     return (
-        <div className='animate__animated animate__fadeIn bg-secondary w-full h-auto'>
+        <div className='animate__animated animate__fadeIn w-full h-auto'>
             <div className='px-4 pt-2 flex justify-between'>
                 <div className='flex-1'>
-                    <h1 className='p-2 text-default font-semi-bold'>News</h1>
+                    <h1 className='p-2  font-semi-bold'>News</h1>
                     <hr className='border-default w-full'/>
                 </div>
                 <Provider />

@@ -47,7 +47,7 @@ function Component(props){
     }, [ props, props.Friday.Wins, props.Friday.Losses ]);
 
     return (
-        <div className='shadow-inner bg-other'>
+        <div className='shadow-inner bg-white dark:bg-coolGray-800'>
             <div className='h-1/2'>
                 <div className='p-4'>
                     <canvas id='statistics' width='800' height='600'></canvas>

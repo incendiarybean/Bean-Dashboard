@@ -36,7 +36,7 @@ html, body, #root, .App {
     background-color: #68D391;
 }
 
-.theme-light{
+/* .theme-light{
     --bg-preset-primary: white;
     --bg-preset-secondary: #E2E8F0;
     --bg-preset-hover: #F7FAFC;
@@ -58,7 +58,7 @@ html, body, #root, .App {
     --bg-preset-field:#4A5568;
     --bg-preset-other: #1A202C;
     --bg-preset-hint: #4B5563;
-}
+} */
 
 .accent-purple{
     --bg-preset-accent: #9F7AEA;
