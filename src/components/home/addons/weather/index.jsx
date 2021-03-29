@@ -9,7 +9,7 @@ function Component(props){
         } else if (props.Weather.Loaded === 'Failed') {
             return <props.Failed/>;
         } else {
-            return <props.Loaded {...props} name='Met Office API'/>;
+            return <props.Loaded {...props} name='Met Office API' url='https://www.metoffice.gov.uk/services/data'/>;
         }
     };
 

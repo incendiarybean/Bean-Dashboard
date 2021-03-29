@@ -20,7 +20,7 @@ function Component(props){
                 <p onClick={e => props.Notes.color(props.data, 'yellow')} className='transition duration-500 ease-in-out hover:-translate-y-1 hover:scale-110 cursor-pointer bg-yellow-400 hover:bg-yellow-500 rounded-full border w-4 h-4'></p>
                 <p onClick={e => props.Notes.color(props.data, 'green')} className='cursor-pointer bg-green-400 hover:bg-green-500 rounded-full border w-4 h-4'></p>
                 <p onClick={e => props.Notes.color(props.data, 'blue')} className='cursor-pointer bg-blue-400 hover:bg-blue-500 rounded-full border w-4 h-4'></p>
-                <p onClick={e => props.Notes.color(props.data, 'gray')} className='cursor-pointer bg-white hover:bg-gray-300 rounded-full border w-4 h-4'></p>
+                <p onClick={e => props.Notes.color(props.data, 'gray')} className='cursor-pointer bg-white hover:bg-coolGray-300 rounded-full border w-4 h-4'></p>
                 <p onClick={e => props.Notes.color(props.data, 'purple')} className='cursor-pointer bg-purple-400 hover:bg-purple-500 rounded-full border w-4 h-4'></p>
                 <p onClick={e => props.Notes.color(props.data, 'red')} className='cursor-pointer bg-red-400 hover:bg-red-500 rounded-full border w-4 h-4'></p>
             </div>

@@ -5,8 +5,8 @@ import { Footer } from '../index.js';
 function Main(props){
 
     return (
-        <div className='flex w-full h-full'>
-            <div className='text-gray-800 dark:text-white bg-gray-100 dark:bg-coolGray-600 overflow-auto w-full lg:w-1/2 h-full'>
+        <div className='transition duration-300 ease-in-out flex w-full h-full bg-coolGray-100 dark:bg-coolGray-700'>
+            <div className='transition duration-300 ease-in-out text-coolGray-800 dark:text-white bg-coolGray-100 dark:bg-coolGray-600 overflow-auto w-full lg:w-1/2 h-full'>
                 <Weather {...props} />
                 <Discord {...props} />
                 <Articles {...props} />

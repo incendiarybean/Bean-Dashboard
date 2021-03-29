@@ -58,7 +58,7 @@ function RenderProps(socket) {
                 <div className='p-2 flex-initial'>
                     <div className='w-full inline-flex text-coolGray-800 dark:text-white bg-white dark:bg-coolGray-700 leading-none rounded-full p-2 shadow text-sm'>
                         <icons.Info/>
-                        <p className='flex items-center hover:text-blue-500 underline name inline-flex px-2 '>Provided by {props.name}.</p>
+                        <a rel="noreferrer" target="_blank" href={props.url} className='flex items-center cursor-pointer hover:text-blue-500 underline name inline-flex px-2 '>Provided by {props.name}.</a>
                     </div>
                 </div>
             );
@@ -497,6 +497,17 @@ function RenderProps(socket) {
     };
 
     useEffect(() => {
+
+        toast.dark('💌 Welcome!', {
+            position: 'bottom-left',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+
         const weatherIcons = (weatherType, desc) => {
             let todayWeather;
             let weatherDesc = desc;
@@ -601,7 +612,7 @@ function RenderProps(socket) {
             if(!window.localStorage.getItem('theme') || !window.localStorage.getItem('colour')){
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     window.localStorage.setItem('theme', 'dark');
-                    window.localStorage.setItem('theme', 'blue');
+                    window.localStorage.setItem('colour', 'blue');
                     document.getElementById('root').classList.add(`dark`, `accent-blue`);
                     document.getElementById('toggle').checked = true;
                 } else {
@@ -827,6 +838,7 @@ function RenderProps(socket) {
         });
 
     }, [socket]);
+
 
     return { props };
 

@@ -3,8 +3,8 @@ import React from 'react';
 function Component(props){
 
     return (
-        <div key={`${props.data}-${props.index}`} className="ml-3 text-coolGray-800 dark:text-white">
-            <div className="mt-2 font-bold" > {props.data}: </div>
+        <div key={`${props.data}-${props.index}`} className="p-3 ml-3 bg-white dark:bg-coolGray-800 text-coolGray-800 dark:text-white">
+            <div className="font-bold" > {props.data}: </div>
             {
                 (props.data === 'CLASS' || props.data === 'user') ?
                     (props.data === 'CLASS') ?

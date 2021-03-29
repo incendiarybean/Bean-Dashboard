@@ -9,7 +9,7 @@ function Component(props){
         } else if (props.News.Loaded === 'Failed') {
             return <props.Failed/>;
         } else {
-            return <props.Loaded {...props} name='PC Gamer'/>;
+            return <props.Loaded {...props} name='PC Gamer' url='https://www.pcgamer.com/' />;
         }
     };
 

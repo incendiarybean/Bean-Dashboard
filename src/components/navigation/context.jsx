@@ -79,26 +79,26 @@ const Menu = (props) => {
             case 'notes_container':
                 return (
                     <div>
-                        <p className='cursor-pointer block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200'>New</p>
+                        <p className='cursor-pointer block px-4 py-2 text-sm text-coolGray-800 border-b hover:bg-coolGray-200'>New</p>
                     </div>
                 );
             case 'note':
                 return (
                     <div>
-                        <p className='cursor-pointer block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200'>Empty</p>
-                        <p className='cursor-pointer block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200'>Delete</p>
+                        <p className='cursor-pointer block px-4 py-2 text-sm text-coolGray-800 border-b hover:bg-coolGray-200'>Empty</p>
+                        <p className='cursor-pointer block px-4 py-2 text-sm text-coolGray-800 border-b hover:bg-coolGray-200'>Delete</p>
                     </div>
                 );
             case 'article':
                 return (
                     <div>
-                        <p onClick={copyLink} className='cursor-pointer block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200'>Copy Link</p>
+                        <p onClick={copyLink} className='cursor-pointer block px-4 py-2 text-sm text-coolGray-800 border-b hover:bg-coolGray-200'>Copy Link</p>
                     </div>
                 );
             default:
                 return (
                     <div>
-                        <p onClick={copyLink} className='cursor-pointer block px-4 py-2 text-sm text-gray-800 border-b hover:bg-gray-200'>Copy Link</p>
+                        <p onClick={copyLink} className='cursor-pointer block px-4 py-2 text-sm text-coolGray-800 border-b hover:bg-coolGray-200'>Copy Link</p>
                     </div>
                 );
         }
@@ -109,13 +109,13 @@ const Menu = (props) => {
             case true:
                 return (
                     <div>
-                        <p onMouseDown={getText} className='cursor-pointer block px-4 py-2 text-sm text-gray-600 border-b hover:bg-gray-200'>Copy</p>
+                        <p onMouseDown={getText} className='cursor-pointer block px-4 py-2 text-sm text-coolGray-600 border-b hover:bg-coolGray-200'>Copy</p>
                     </div>
                 );
             default:
                 return (
                     <div>
-                        <p className='disabled block px-4 py-2 text-sm text-gray-400 border-b bg-gray-100'>Copy</p>
+                        <p className='disabled block px-4 py-2 text-sm text-coolGray-400 border-b bg-coolGray-100'>Copy</p>
                     </div>
                 );
         }
@@ -126,13 +126,13 @@ const Menu = (props) => {
             case true:
                 return (
                     <div>
-                        <p onMouseDown={getPaste} className='cursor-pointer block px-4 py-2 text-sm text-gray-600 border-b hover:bg-gray-200'>Paste</p>
+                        <p onMouseDown={getPaste} className='cursor-pointer block px-4 py-2 text-sm text-coolGray-600 border-b hover:bg-coolGray-200'>Paste</p>
                     </div>
                 );
             default:
                 return (
                     <div>
-                        <p className='disabled block px-4 py-2 text-sm text-gray-400 border-b bg-gray-100'>Paste</p>
+                        <p className='disabled block px-4 py-2 text-sm text-coolGray-400 border-b bg-coolGray-100'>Paste</p>
                     </div>
                 );
         }

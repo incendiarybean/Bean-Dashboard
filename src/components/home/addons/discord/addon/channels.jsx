@@ -4,11 +4,11 @@ import { User } from './';
 function Component(props){
 
     return (
-        <div className="bg-white dark:bg-gray-700 col-span-3 xl:col-span-2 flex-col mt-2 p-2 border-b-4 border-accent shadow">
+        <div className="bg-white dark:bg-coolGray-700 col-span-3 xl:col-span-2 flex-col mt-2 p-2 border-b-4 border-accent shadow">
             {props.data.channels.map(data => {
                 return (
                     <div key={`${data.name}-channel-${new Date()}`} className="cursor-pointer select-none">
-                        <div id={data.name} onClick={e => props.showChild(e)} className="flex shadow p-1 rounded-full dark:bg-coolGray-800 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 dark:text-white my-1 shadow">
+                        <div id={data.name} onClick={e => props.showChild(e)} className="flex shadow p-1 rounded-full dark:bg-coolGray-800 bg-coolGray-100 dark:bg-coolGray-900 border border-gray-200 dark:border-gray-600 dark:text-white my-1 shadow">
                             <span className="flex-1 flex truncate">
                                 <span className="p-1">
                                     <props.icons.Volume/>

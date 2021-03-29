@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 function Nav(props) {
 
     return(
-        <nav className='sticky max-h-full top-0 z-30 flex items-center justify-between flex-wrap bg-white dark:bg-coolGray-700 border-accent border-b-4 shadow'>
+        <nav className='sticky max-h-full top-0 z-30 flex items-center justify-between flex-wrap bg-coolGray-100 dark:bg-coolGray-700 border-accent border-b-4 shadow'>
             <div className='block lg:hidden p-2'>
                 <button onClick={props.Theme.menu} className='links mr-4 flex items-center px-3 py-2 border rounded text-accent border-accent hover:text-accent hover:bg-accent'>
                     <props.icons.Burger/>
@@ -13,11 +13,11 @@ function Nav(props) {
                 <div className='animate__animated mx-4 linklist hidden h-full flex flex-col items-center lg:items-start lg:block text-md lg:flex-grow'>
                     <div className='w-full block flex-grow lg:flex lg:items-center lg:w-auto'>
                         <div id='links-block' className='text-md pb-3 lg:pb-0 px-3 lg:px-0 lg:text-sm h-full lg:flex-grow'>
-                            <Link to={`/`} className='transition duration-300 bg-coolGray-200 dark:bg-coolGray-800 hover:text-white rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-gray-900 dark:text-white hover:bg-accent dark:hover:bg-accent mr-4 shadow'>Home</Link>
-                            <Link to={`/stats`} className='transition duration-300 bg-coolGray-200 dark:bg-coolGray-800 hover:text-white rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-gray-900 dark:text-white hover:bg-accent dark:hover:bg-accent mr-4 shadow'>Friday</Link>
-                            <Link to={`/sandstorm`} className='transition duration-300 bg-coolGray-200 dark:bg-coolGray-800 hover:text-white rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-gray-900 dark:text-white hover:bg-accent dark:hover:bg-accent mr-4 shadow'>Sandstorm Randomizer</Link>
-                            <a href='https://benweare.co.uk' className='transition duration-300 bg-coolGray-200 dark:bg-coolGray-800 hover:text-white rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-gray-900 dark:text-white hover:bg-accent dark:hover:bg-accent mr-4 shadow'>About</a>
-                            <a href='https://github.com/incendiarybean/BeanPi' className='transition duration-300 bg-coolGray-200 dark:bg-coolGray-800 hover:text-white rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-gray-900 dark:text-white hover:bg-accent dark:hover:bg-accent mr-4 shadow'>Source</a>
+                            <Link to={`/`} className='transition duration-300 bg-white dark:bg-coolGray-800 hover:text-white rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-coolGray-900 dark:text-white hover:bg-accent dark:hover:bg-accent mr-4 shadow'>Home</Link>
+                            <Link to={`/stats`} className='transition duration-300 bg-white dark:bg-coolGray-800 hover:text-white rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-coolGray-900 dark:text-white hover:bg-accent dark:hover:bg-accent mr-4 shadow'>Friday</Link>
+                            <Link to={`/sandstorm`} className='transition duration-300 bg-white dark:bg-coolGray-800 hover:text-white rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-coolGray-900 dark:text-white hover:bg-accent dark:hover:bg-accent mr-4 shadow'>Sandstorm Randomizer</Link>
+                            <a href='https://benweare.co.uk' className='transition duration-300 bg-white dark:bg-coolGray-800 hover:text-white rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-coolGray-900 dark:text-white hover:bg-accent dark:hover:bg-accent mr-4 shadow'>About</a>
+                            <a href='https://github.com/incendiarybean/BeanPi' className='transition duration-300 bg-white dark:bg-coolGray-800 hover:text-white rounded p-2 block mt-4 lg:inline-block lg:mt-0 text-coolGray-900 dark:text-white hover:bg-accent dark:hover:bg-accent mr-4 shadow'>Source</a>
                         </div>
                         <div id='chatbox' className='relative w-64 flex flex-col justify hidden xl:block z-2 mr-6 text-center'>
                             <div className='group rounded shadow h-auto'>
@@ -27,12 +27,12 @@ function Nav(props) {
                                         onFocus={props.Search.setKeyIterator}
                                         onBlur={props.Search.hideSearch}
                                         id='search'
-                                        className='transition duration-300 text-gray-800 dark:text-white group ml-4 placeholder-coolGray-800 dark:placeholder-white bg-white dark:bg-coolGray-800 focus:outline-none'
+                                        className='transition duration-300 text-coolGray-800 dark:text-white group ml-4 placeholder-coolGray-800 dark:placeholder-white bg-white dark:bg-coolGray-800 focus:outline-none'
                                         placeholder='Search'
                                         autoComplete='off'
                                         list='quick-search'
                                     />
-                                    <button onClick={props.Search.ButtonSearch} className="w-8 h-8 rounded bg-accent flex items-center justify-around hover:bg-gray-700">
+                                    <button onClick={props.Search.ButtonSearch} className="w-8 h-8 rounded bg-accent flex items-center justify-around hover:bg-coolGray-700">
                                         <props.icons.Search/>
                                     </button>
                                 </div>
@@ -60,7 +60,7 @@ function Nav(props) {
                         </div>
                     </div>
                 </div>
-                <div tabIndex='1' className='text-gray-800 dark:text-white linklist hidden lg:block h-full relative started-container shadow-full inline-block p-2 lg:-ml-2 lg:pl-2 w-full lg:w-56 hover:bg-coolGray-200 dark:hover:bg-coolGray-800 lg:inline-block lg:mt-0 cursor-pointer rounded-b'>
+                <div tabIndex='1' className='text-coolGray-800 dark:text-white linklist hidden lg:block h-full relative started-container shadow-full inline-block p-2 lg:-ml-2 lg:pl-2 w-full lg:w-56 hover:bg-coolGray-200 dark:hover:bg-coolGray-800 lg:inline-block lg:mt-0 cursor-pointer rounded-b'>
                     <div className='started p-1 text-md'>
                         <div className='text-md flex flex-row justify-between'>
                             <p className="">Settings</p>
@@ -99,7 +99,7 @@ function Nav(props) {
                             <p>Light</p>
                             <div className='relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in'>
                                 <input type='checkbox' onClick={props.Theme.setTheme} name='toggle' id='toggle' className='toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer'/>
-                                <label htmlFor='toggle' className='toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer'></label>
+                                <label htmlFor='toggle' className='toggle-label block overflow-hidden h-6 rounded-full bg-coolGray-300 cursor-pointer'></label>
                             </div>
                             <p>Dark</p>
                         </div>

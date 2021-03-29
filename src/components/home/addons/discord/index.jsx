@@ -9,7 +9,7 @@ function Component(props){
         } else if (props.Discord.Loaded === 'Failed') {
             return <props.Failed/>;
         } else {
-            return <props.Loaded {...props} name='Discord JS'/>;
+            return <props.Loaded {...props} name='Discord JS' url='https://discord.js.org/#/' />;
         }
     };
 
