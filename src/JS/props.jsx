@@ -8,6 +8,8 @@ if(process.env.NODE_ENV === 'development') console.log(process.env);
 function RenderProps(socket) {
     let timer = 0;
 
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [user, setUser] = useState(false);
     const [WeatherLoaded, setWeatherLoaded] = useState(false);
     const [NotesLoaded, setNotesLoaded] = useState(false);
     const [ThemeLoaded, setThemeLoaded] = useState(false);
@@ -32,6 +34,7 @@ function RenderProps(socket) {
     const [Discord, setDiscord] = useState([]);
 
     const props = {
+        UserInfo: user,
         icons: icons,
         Failed: () => {
             return (
@@ -493,121 +496,91 @@ function RenderProps(socket) {
         Discord: {
             Group: Discord,
             Loaded: DiscordLoaded,
+        },
+        checkPassword: (p) => {
+            let mustMatch = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+            if(p.match(mustMatch)) return true;
+            else return false;
+        },
+        Authed: loggedIn,
+        Login: (e) => {
+            e.preventDefault();
+            let items = document.getElementById(e.target.id).querySelectorAll('input');
+            let userObject = {};
+            let valid = true;
+
+            items.forEach(async element => {
+                if(!element.value || element.value === '') valid = false;
+                userObject[element.id] = element.value;
+                if(element.id === 'password'){
+                    let isOk = await props.checkPassword(element.value);
+                    if(!isOk && valid) return props.error('Please make sure your password meets the criteria!');
+                }
+            });
+
+            if(!valid) return props.error('Please be sure to complete the form.');
+
+            fetch(`https://${process.env.REACT_APP_HOST}/login`, {
+                method: 'POST',
+                body: JSON.stringify(userObject),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(data => data.json())
+            .then(data => {
+                setUser(data.user);
+                return setLoggedIn(true);
+            })
+            .catch(e => {
+                setLoggedIn(false);
+                props.error('Username or Password is incorrect.');
+            });
+        },
+        SignUp: (e) => {
+            e.preventDefault();
+            let items = document.getElementById(e.target.id).querySelectorAll('input');
+            let userObject = {};
+
+            items.forEach(async element => {
+                userObject[element.id] = element.value;
+                if(element.id === 'password'){
+                    let isOk = await props.checkPassword(element.value);
+                    if(!isOk) return props.error('Please make sure your password meets the criteria!');
+                    fetch(`https://${process.env.REACT_APP_HOST}/api/v0/auth/create`, {
+                        method: 'POST',
+                        body: JSON.stringify(userObject)
+                    })
+                    .then(data => data.json())
+                    .then(data => {
+                        props.info('Account Creation Success.');
+                        fetch(`https://${process.env.REACT_APP_HOST}/login`, {
+                            method: 'POST',
+                            body: JSON.stringify({username: userObject.username, password: userObject.password}),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(data => data.json())
+                        .then(data => {
+                            setUser(data.user);
+                            return setLoggedIn(true);
+                        })
+                        .catch(e => {
+                            setLoggedIn(false);
+                            props.error(e);
+                        });
+                    })
+                    .catch(e => {
+                        props.error(e);
+                    });
+                }
+            });
         }
     };
 
     useEffect(() => {
-
-        toast.dark('💌 Welcome!', {
-            position: 'bottom-left',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
-
-        const weatherIcons = (weatherType, desc) => {
-            let todayWeather;
-            let weatherDesc = desc;
-            switch(weatherType){
-                case 'cloud':
-                    todayWeather = <props.icons.Cloud/>;
-                    return {todayWeather, weatherDesc};
-                case 'sun':
-                    todayWeather = <props.icons.Sun/>;
-                    return {todayWeather, weatherDesc};
-                case 'rain':
-                    todayWeather = <props.icons.Rain/>;
-                    return {todayWeather, weatherDesc};
-                case 'snow':
-                    todayWeather = <props.icons.Snow/>;
-                    return {todayWeather, weatherDesc};
-                case 'thunder':
-                    todayWeather = <props.icons.Thunder/>;
-                    return {todayWeather, weatherDesc};
-                case 'foggy':
-                    todayWeather = <props.icons.Foggy/>;
-                    return {todayWeather, weatherDesc};
-                case 'error':
-                    todayWeather = <props.icons.Error/>;
-                    weatherDesc = `${desc.code} : ${desc.message}`;
-                    return {todayWeather, weatherDesc};
-                default:
-                    return({todayWeather:'todayWeather', weatherDesc:'weatherDesc'});
-            }
-        };
-
-        const weatherCode = async (code) => {
-            switch(code){
-                case 0:
-                    return await weatherIcons('sun', 'Clear night');
-                case 1:
-                    return await weatherIcons('sun', 'Sunny day');
-                case 2:
-                    return await weatherIcons('cloud', 'Partly cloudy (night)');
-                case 3:
-                    return await weatherIcons('cloud', 'Partly cloudy (day)');
-                case 4:
-                    return console.log('Not used');
-                case 5:
-                    return await weatherIcons('foggy', 'Mist');
-                case 6:
-                    return await weatherIcons('foggy', 'Fog');
-                case 7:
-                    return await weatherIcons('cloud', 'Cloudy');
-                case 8:
-                    return await weatherIcons('cloud', 'Overcast');
-                case 9:
-                    return await weatherIcons('rain', 'Light rain shower (night)');
-                case 10:
-                    return await weatherIcons('rain', 'Light rain shower (day)');
-                case 11:
-                    return await weatherIcons('rain', 'Drizzle');
-                case 12:
-                    return await weatherIcons('rain', 'Light rain');
-                case 13:
-                    return await weatherIcons('rain', 'Heavy rain shower (night)');
-                case 14:
-                    return await weatherIcons('rain', 'Heavy rain shower (day)');
-                case 15:
-                    return await weatherIcons('rain', 'Heavy rain');
-                case 16:
-                    return await weatherIcons('snow', 'Sleet shower (night)');
-                case 17:
-                    return await weatherIcons('snow', 'Sleet shower (day)');
-                case 18:
-                    return await weatherIcons('snow', 'Sleet');
-                case 19:
-                    return await weatherIcons('snow', 'Hail shower (night)');
-                case 20:
-                    return await weatherIcons('snow', 'Hail shower (day)');
-                case 21:
-                    return await weatherIcons('snow', 'Hail');
-                case 22:
-                    return await weatherIcons('snow', 'Light snow shower (night)');
-                case 23:
-                    return await weatherIcons('snow', 'Light snow shower (day)');
-                case 24:
-                    return await weatherIcons('snow', 'Light snow');
-                case 25:
-                    return await weatherIcons('snow', 'Heavy snow shower (night)');
-                case 26:
-                    return await weatherIcons('snow', 'Heavy snow shower (day)');
-                case 27:
-                    return await weatherIcons('snow', 'Heavy snow');
-                case 28:
-                    return await weatherIcons('thunder', 'Thunder shower (night)');
-                case 29:
-                    return await weatherIcons('thunder', 'Thunder shower (day)');
-                case 30:
-                    return await weatherIcons('thunder', 'Thunder');
-                default:
-                    return console.log('No handler for that response');
-            }
-        };
-
+        
         const initTheme = () => {
             if(!window.localStorage.getItem('theme') || !window.localStorage.getItem('colour')){
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -627,9 +600,10 @@ function RenderProps(socket) {
                 if(theme.colour === 'null' && theme.theme === 'light') theme.colour = 'purple';
                 if(theme.colour === 'null' && theme.theme === 'dark') theme.colour = 'blue';
                 document.getElementById('root').classList.add(`accent-${theme.colour}`);
-                if (theme.theme === 'dark') document.getElementById('toggle').checked = true;
-                if(!document.getElementById(`set-${theme.colour}`)) return;
-                document.getElementById(`set-${theme.colour}`).classList.add('border-2');
+                if (document.getElementById('toggle') && theme.theme === 'dark') document.getElementById('toggle').checked = true;
+                if(document.getElementById(`set-${theme.colour}`)) {
+                    document.getElementById(`set-${theme.colour}`).classList.add('border-2');
+                }
             }
 
             setThemeLoaded(true);
@@ -652,193 +626,322 @@ function RenderProps(socket) {
                     drop.children[1].style.display = 'none';
                 });
             }
+
             return true;
-        };
-
-        const setDate = (date) => {
-            date = new Date(date);
-            var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-            let dayPrefix = date.getDate();
-            switch(dayPrefix){
-                case 1:
-                    return `${days[date.getDay()]} ${dayPrefix}st, ${months[date.getMonth()]}`;
-                case 2:
-                    return `${days[date.getDay()]} ${dayPrefix}nd, ${months[date.getMonth()]}`;
-                case 3:
-                    return `${days[date.getDay()]} ${dayPrefix}rd, ${months[date.getMonth()]}`;
-                default:
-                    return `${days[date.getDay()]} ${dayPrefix}th, ${months[date.getMonth()]}`;
-            }
-        };
-
-        const getWeather = async () => {
-            let params = new URLSearchParams({date: 'daily'});
-            fetch(`https://${process.env.REACT_APP_HOST}/api/v0/weather?${params}`)
-            .then(data => data.json())
-            .then(data => {
-                setTodayWeather(TodayWeather => TodayWeather = []);
-                setDailyWeather(DailyWeather => DailyWeather = []);
-                setLocation(data.location);
-                data.items.features[0].properties.timeSeries.map( async data => {
-                    data.Day = setDate(data.time);
-                    data.MaxTemp = `${Math.round(data.dayMaxScreenTemperature)}º`;
-                    data.LowTemp = `${Math.round(data.nightMinScreenTemperature)}º`;
-                    data.MaxFeels = `${Math.round(data.dayMaxFeelsLikeTemp)}º`;
-                    data.Wind = Math.round(data.midnight10MWindGust);
-                    let desc = await weatherCode(data.daySignificantWeatherCode);
-                    data.Icon = desc.todayWeather;
-                    data.Description = desc.weatherDesc;
-                    if (new Date(data.time).toDateString() === new Date().toDateString()) {
-                        setTodayWeather(data);
-                    }
-                    return setDailyWeather(DailyWeather => [...DailyWeather, data]);
-                });
-                setWeatherLoaded(true);
-            })
-            .catch(e => {
-                console.log(e);
-                setWeatherLoaded('Failed');
-            });
-        };
-
-        const getNotes = async () => {
-            fetch(`https://${process.env.REACT_APP_HOST}/api/v0/sticky`)
-            .then(data => data.json())
-            .then(data => {
-                setNote(data.items);
-                setNotesLoaded(true);
-            })
-            .catch(e => {
-                setNotesLoaded('Failed');
-            });
-        };
-
-        const getDiscord = () => {
-            fetch(`https://${process.env.REACT_APP_HOST}/api/v0/discord/prochoice`)
-            .then(data => data.json())
-            .then(data => {
-                setDiscord(Discord => Discord = []);
-                setDiscord(Discord => [...Discord, data]);
-                setDiscordLoaded(true);
-            })
-            .catch(e => {
-                console.log(e);
-                setDiscordLoaded('Failed');
-            });
-        };
-
-        const getNews = async () => {
-            fetch(`https://${process.env.REACT_APP_HOST}/api/v0/news`)
-            .then(data => data.json())
-            .then(data => {
-                setArticles(Articles => Articles = []);
-                data.items.map(data => {
-                    let html = data;
-                    let newLink = document.createElement('p');
-                    newLink.innerHTML = html;
-                    let isLink = newLink.firstChild.classList.contains('article-link');
-                    if(isLink && newLink.children[0] !== undefined){
-                        let img = newLink.children[0].childNodes[1].childNodes[1].children[0].attributes[1].nodeValue;
-                        img = img.split(':');
-                        img = 'https://'+img[1];
-                        let articleName = newLink.children[0].ariaLabel;
-                        let linkName = newLink.firstChild.href;
-                        let site = linkName.split('/')[2];
-                        let date = newLink.children[0].childNodes[1].lastElementChild.childNodes[1].lastElementChild.lastElementChild.attributes['datetime'].value;
-                        date = date.split('T')[0];
-                        let obj = {
-                            title: articleName,
-                            img: img,
-                            link: linkName,
-                            site: site,
-                            date: date
-                        };
-                        setArticles(Articles => [...Articles, obj]);
-                    }
-                    return true;
-                });
-
-                setNewsLoaded(true);
-            })
-            .catch(e => {
-                setNewsLoaded('Failed');
-            });
-        };
-
-        const getFriday = () => {
-            fetch(`https://${process.env.REACT_APP_HOST}/api/v0/friday`)
-            .then(data => data.json())
-            .then(data => {
-
-                if(data.itemsLength === 1){
-                    data.items = [data.items];
-                }
-
-                setDates(Dates => Dates = []);
-                setWins(Wins => Wins = []);
-                setLosses(Losses => Losses = []);
-
-                data.items.map(data => {
-                    setDates(Dates => [...Dates, data.date]);
-                    setWins(Wins => [...Wins, data.win]);
-                    setLosses(Losses => [...Losses, data.loss]);
-                    if(data.date === new Date().toLocaleDateString()) {
-                        setTodayWins(data.win);
-                        setTodayLosses(data.loss);
-                    }
-                    return true;
-                });
-
-                setFridayLoaded(true);
-            })
-            .catch(e => {
-                console.log(e);
-                setFridayLoaded('Failed');
-            });
-        };
-
-        const getSandstorm = () => {
-            setSandstormLoaded(true);
         };
 
         initTheme();
 
-        socket.on('connect', () => {
-            getDiscord();
-            getNews();
-            getWeather();
-            getNotes();
-            getFriday();
-            getSandstorm();
-        });
-        socket.on('disconnect', () => {
-            setNewsLoaded(false);
-            setWeatherLoaded(false);
-            setNotesLoaded(false);
-            return toast.error('Server has disconnected, we\'ll reconnect when we can');
-        });
-        socket.on('NEWS', () => {
-            setNewsLoaded(false);
-            getNews();
-        });
-        socket.on('FRIDAY', () => {
-            getFriday();
-        });
-        socket.on('WEATHER', () => {
-            setNewsLoaded(false);
-            getWeather();
-        });
-        socket.on('STICKY', () => {
-            getNotes();
-        });
-        socket.on('DISCORD_UPDATE_USERS', () => {
-            getDiscord();
-        });
+        switch(true){
+            case !!user.username: {
+                const weatherIcons = (weatherType, desc) => {
+                    let todayWeather;
+                    let weatherDesc = desc;
+                    switch(weatherType){
+                        case 'cloud':
+                            todayWeather = <props.icons.Cloud/>;
+                            return {todayWeather, weatherDesc};
+                        case 'sun':
+                            todayWeather = <props.icons.Sun/>;
+                            return {todayWeather, weatherDesc};
+                        case 'rain':
+                            todayWeather = <props.icons.Rain/>;
+                            return {todayWeather, weatherDesc};
+                        case 'snow':
+                            todayWeather = <props.icons.Snow/>;
+                            return {todayWeather, weatherDesc};
+                        case 'thunder':
+                            todayWeather = <props.icons.Thunder/>;
+                            return {todayWeather, weatherDesc};
+                        case 'foggy':
+                            todayWeather = <props.icons.Foggy/>;
+                            return {todayWeather, weatherDesc};
+                        case 'error':
+                            todayWeather = <props.icons.Error/>;
+                            weatherDesc = `${desc.code} : ${desc.message}`;
+                            return {todayWeather, weatherDesc};
+                        default:
+                            return({todayWeather:'todayWeather', weatherDesc:'weatherDesc'});
+                    }
+                };
 
-    }, [socket]);
+                const weatherCode = async (code) => {
+                    switch(code){
+                        case 0:
+                            return await weatherIcons('sun', 'Clear night');
+                        case 1:
+                            return await weatherIcons('sun', 'Sunny day');
+                        case 2:
+                            return await weatherIcons('cloud', 'Partly cloudy (night)');
+                        case 3:
+                            return await weatherIcons('cloud', 'Partly cloudy (day)');
+                        case 4:
+                            return console.log('Not used');
+                        case 5:
+                            return await weatherIcons('foggy', 'Mist');
+                        case 6:
+                            return await weatherIcons('foggy', 'Fog');
+                        case 7:
+                            return await weatherIcons('cloud', 'Cloudy');
+                        case 8:
+                            return await weatherIcons('cloud', 'Overcast');
+                        case 9:
+                            return await weatherIcons('rain', 'Light rain shower (night)');
+                        case 10:
+                            return await weatherIcons('rain', 'Light rain shower (day)');
+                        case 11:
+                            return await weatherIcons('rain', 'Drizzle');
+                        case 12:
+                            return await weatherIcons('rain', 'Light rain');
+                        case 13:
+                            return await weatherIcons('rain', 'Heavy rain shower (night)');
+                        case 14:
+                            return await weatherIcons('rain', 'Heavy rain shower (day)');
+                        case 15:
+                            return await weatherIcons('rain', 'Heavy rain');
+                        case 16:
+                            return await weatherIcons('snow', 'Sleet shower (night)');
+                        case 17:
+                            return await weatherIcons('snow', 'Sleet shower (day)');
+                        case 18:
+                            return await weatherIcons('snow', 'Sleet');
+                        case 19:
+                            return await weatherIcons('snow', 'Hail shower (night)');
+                        case 20:
+                            return await weatherIcons('snow', 'Hail shower (day)');
+                        case 21:
+                            return await weatherIcons('snow', 'Hail');
+                        case 22:
+                            return await weatherIcons('snow', 'Light snow shower (night)');
+                        case 23:
+                            return await weatherIcons('snow', 'Light snow shower (day)');
+                        case 24:
+                            return await weatherIcons('snow', 'Light snow');
+                        case 25:
+                            return await weatherIcons('snow', 'Heavy snow shower (night)');
+                        case 26:
+                            return await weatherIcons('snow', 'Heavy snow shower (day)');
+                        case 27:
+                            return await weatherIcons('snow', 'Heavy snow');
+                        case 28:
+                            return await weatherIcons('thunder', 'Thunder shower (night)');
+                        case 29:
+                            return await weatherIcons('thunder', 'Thunder shower (day)');
+                        case 30:
+                            return await weatherIcons('thunder', 'Thunder');
+                        default:
+                            return console.log('No handler for that response');
+                    }
+                };
 
+                const setDate = (date) => {
+                    date = new Date(date);
+                    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                    var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+                    let dayPrefix = date.getDate();
+                    switch(dayPrefix){
+                        case 1:
+                            return `${days[date.getDay()]} ${dayPrefix}st, ${months[date.getMonth()]}`;
+                        case 2:
+                            return `${days[date.getDay()]} ${dayPrefix}nd, ${months[date.getMonth()]}`;
+                        case 3:
+                            return `${days[date.getDay()]} ${dayPrefix}rd, ${months[date.getMonth()]}`;
+                        default:
+                            return `${days[date.getDay()]} ${dayPrefix}th, ${months[date.getMonth()]}`;
+                    }
+                };
+
+                const getWeather = async () => {
+                    let params = new URLSearchParams({date: 'daily'});
+                    fetch(`https://${process.env.REACT_APP_HOST}/api/v0/weather?${params}`)
+                    .then(data => data.json())
+                    .then(data => {
+                        setTodayWeather(TodayWeather => TodayWeather = []);
+                        setDailyWeather(DailyWeather => DailyWeather = []);
+                        setLocation(data.location);
+                        data.items.features[0].properties.timeSeries.map( async data => {
+                            data.Day = setDate(data.time);
+                            data.MaxTemp = `${Math.round(data.dayMaxScreenTemperature)}º`;
+                            data.LowTemp = `${Math.round(data.nightMinScreenTemperature)}º`;
+                            data.MaxFeels = `${Math.round(data.dayMaxFeelsLikeTemp)}º`;
+                            data.Wind = Math.round(data.midnight10MWindGust);
+                            let desc = await weatherCode(data.daySignificantWeatherCode);
+                            data.Icon = desc.todayWeather;
+                            data.Description = desc.weatherDesc;
+                            if (new Date(data.time).toDateString() === new Date().toDateString()) {
+                                setTodayWeather(data);
+                            }
+                            return setDailyWeather(DailyWeather => [...DailyWeather, data]);
+                        });
+                        setWeatherLoaded(true);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        setWeatherLoaded('Failed');
+                    });
+                };
+
+                const getNotes = async () => {
+                    fetch(`https://${process.env.REACT_APP_HOST}/api/v0/sticky`)
+                    .then(data => data.json())
+                    .then(data => {
+                        setNote(data.items);
+                        setNotesLoaded(true);
+                    })
+                    .catch(e => {
+                        setNotesLoaded('Failed');
+                    });
+                };
+
+                const getDiscord = () => {
+                    fetch(`https://${process.env.REACT_APP_HOST}/api/v0/discord/prochoice`)
+                    .then(data => data.json())
+                    .then(data => {
+                        setDiscord(Discord => Discord = []);
+                        setDiscord(Discord => [...Discord, data]);
+                        setDiscordLoaded(true);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        setDiscordLoaded('Failed');
+                    });
+                };
+
+                const getNews = async () => {
+                    fetch(`https://${process.env.REACT_APP_HOST}/api/v0/news`)
+                    .then(data => data.json())
+                    .then(data => {
+                        setArticles(Articles => Articles = []);
+                        data.items.map(data => {
+                            let html = data;
+                            let newLink = document.createElement('p');
+                            newLink.innerHTML = html;
+                            let isLink = newLink.firstChild.classList.contains('article-link');
+                            if(isLink && newLink.children[0] !== undefined){
+                                let img = newLink.children[0].childNodes[1].childNodes[1].children[0].attributes[1].nodeValue;
+                                img = img.split(':');
+                                img = 'https://'+img[1];
+                                let articleName = newLink.children[0].ariaLabel;
+                                let linkName = newLink.firstChild.href;
+                                let site = linkName.split('/')[2];
+                                let date = newLink.children[0].childNodes[1].lastElementChild.childNodes[1].lastElementChild.lastElementChild.attributes['datetime'].value;
+                                date = date.split('T')[0];
+                                let obj = {
+                                    title: articleName,
+                                    img: img,
+                                    link: linkName,
+                                    site: site,
+                                    date: date
+                                };
+                                setArticles(Articles => [...Articles, obj]);
+                            }
+                            return true;
+                        });
+
+                        setNewsLoaded(true);
+                    })
+                    .catch(e => {
+                        setNewsLoaded('Failed');
+                    });
+                };
+
+                const getFriday = () => {
+                    fetch(`https://${process.env.REACT_APP_HOST}/api/v0/friday`)
+                    .then(data => data.json())
+                    .then(data => {
+
+                        if(data.itemsLength === 1){
+                            data.items = [data.items];
+                        }
+
+                        setDates(Dates => Dates = []);
+                        setWins(Wins => Wins = []);
+                        setLosses(Losses => Losses = []);
+
+                        data.items.map(data => {
+                            setDates(Dates => [...Dates, data.date]);
+                            setWins(Wins => [...Wins, data.win]);
+                            setLosses(Losses => [...Losses, data.loss]);
+                            if(data.date === new Date().toLocaleDateString()) {
+                                setTodayWins(data.win);
+                                setTodayLosses(data.loss);
+                            }
+                            return true;
+                        });
+
+                        setFridayLoaded(true);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        setFridayLoaded('Failed');
+                    });
+                };
+
+                const getSandstorm = () => {
+                    setSandstormLoaded(true);
+                };
+
+                getDiscord();
+                getNews();
+                getWeather();
+                getNotes();
+                getFriday();
+                getSandstorm();
+
+                socket.on('disconnect', () => {
+                    setNewsLoaded(false);
+                    setWeatherLoaded(false);
+                    setNotesLoaded(false);
+                    window.location.href = '/';
+                });
+
+                socket.on('NEWS', () => {
+                    setNewsLoaded(false);
+                    getNews();
+                });
+                socket.on('FRIDAY', () => {
+                    getFriday();
+                });
+                socket.on('WEATHER', () => {
+                    setNewsLoaded(false);
+                    getWeather();
+                });
+                socket.on('STICKY', () => {
+                    getNotes();
+                });
+                socket.on('DISCORD_UPDATE_USERS', () => {
+                    getDiscord();
+                });
+            }
+        break;
+        default:
+            if(!user){
+                fetch(`https://${process.env.REACT_APP_HOST}/user`)
+                .then(data => data.json())
+                .then(data => {
+                    if(data.username) {
+                        setUser(data);
+                        return setLoggedIn(true);
+                    }
+                })
+                .catch(e => {
+                    setLoggedIn(false);
+                });
+
+                toast.dark('💌 Welcome!', {
+                    position: 'bottom-left',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+        break;
+        }
+    }, [socket, user]);
 
     return { props };
 

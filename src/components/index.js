@@ -4,4 +4,4 @@ export {default as Footer} from './navigation/footer.jsx';
 export {default as Main} from './home/index.jsx';
 export {default as Friday} from './friday/index.jsx';
 export {default as Sandstorm} from './sandstorm/index.jsx';
-
+export {default as Login} from './login/index';

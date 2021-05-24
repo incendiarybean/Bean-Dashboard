@@ -135,6 +135,23 @@ export const LoaderSmall = () => {
     );
 };
 
+export const LoaderDots = () => {
+    let circleCommonClasses = 'h-5 w-5 bg-current rounded-full bg-blue-400 dark:bg-blue-200';
+
+    return (
+        <div className="self-center flex justify-around flex-col bg-white dark:bg-coolGray-800 px-10 py-20 rounded shadow-lg">
+            <div className='flex self-center p-2'>
+                <div className={`${circleCommonClasses} mr-1 animate-bounce`}></div>
+                <div className={`${circleCommonClasses} mr-1 animate-bounce2`}></div>
+                <div className={`${circleCommonClasses} mr-1 animate-bounce`}></div>
+                <div className={`${circleCommonClasses} mr-1 animate-bounce2`}></div>
+                <div className={`${circleCommonClasses} animate-bounce`}></div>
+            </div>
+            <p className="font-semibold  text-coolGray-800 dark:text-white self-center">Loading... Please Wait!</p>
+        </div>
+    );
+};
+
 export const Failed = () => {
     return (
         <span className='inline-flex  rounded-full h-6 p-1 py-2 justify-center items-center'>

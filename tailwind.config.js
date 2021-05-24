@@ -1,11 +1,11 @@
-const colors = require('tailwindcss/colors')
+const colors = require('tailwindcss/colors');
 
 module.exports = {
     darkMode: 'class',
     purge: {
         content: [
-        ".public/index.html",
-        "./src/**/**/**/**/**/**/*.{jsx,js}"
+        '.public/index.html',
+        './src/**/**/**/**/**/**/*.{jsx,js}'
         ],
         options: {
             safelist: [/^bg-/, /^text-/, /^hover:/],
@@ -13,6 +13,9 @@ module.exports = {
     },
     theme: {
         extend: {
+            animation: {
+                bounce2: 'bounce 1s infinite 200ms ',
+            },
             colors: {
                 coolGray: colors.coolGray,
                 lightBlue: colors.lightBlue,
@@ -79,4 +82,4 @@ module.exports = {
         borderColor: ['dark', 'hover', 'active', 'focus', 'group-focus', 'focus-within'],
         shadow: ['dark', 'hover', 'active', 'focus', 'group-focus', 'focus-within'],
     }
-}
+};

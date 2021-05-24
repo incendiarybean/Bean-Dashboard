@@ -1,25 +1,42 @@
 const express = require('express'),
-    cors = require('cors'),
-    bodyParser = require('body-parser'),
     fetch = require('node-fetch'),
+    cors = require('cors'),
     path = require('path'),
     createProxyMiddleware = require('http-proxy-middleware'),
     https = require('https'),
-    winston = require('winston'),
-    clientIO = require('socket.io-client');
-
-let time = new Date();
+    clientIO = require('socket.io-client'),
+    passport = require('passport'),
+    LocalStrategy = require('passport-local').Strategy,
+    session = require('express-session');
 
 // USE JSON BODY PARSING //
 const route = (app, serverhttp) => {
 
-    app.use(express.static(path.join(__dirname, '../../build')))
+    const sessionManager = session({
+        secret: 'keyboard cat',
+        cookie: {},
+        saveUninitialized: true,
+        resave: false
+    });
+
+    app.use(sessionManager);
+    app.use(express.json());
+    app.use('/static', express.static(path.join(__dirname, '../../build/static')));
+
+    const httpsAgent = new https.Agent({
+        rejectUnauthorized: false,
+    });
+
+    app.use(cors({
+        origin: ['https://localhost:8080', 'https://localhost:8000', 'https://localhost:3000'],
+        'Access-Control-Allow-Origin': '*'
+    }));
 
     // INIT SOCKET //
     const io = require('socket.io')(serverhttp, {
         cors: {
-            origin: "*",
-            methods: ["GET", "POST"]
+            origin: '*',
+            methods: ['GET', 'POST']
         }
     });
 
@@ -65,14 +82,68 @@ const route = (app, serverhttp) => {
             return require('winston');
         }
     }));
+    
+    passport.use(new LocalStrategy({
+        usernameField: 'username',
+        passwordField: 'password',
+        session: true
+    },
+    (username, password, done) => {
+        fetch(`${APIURL}api/v0/auth`, {
+            agent: httpsAgent,
+            method: 'POST',
+            body: JSON.stringify({
+                username: username,
+                password: password
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': process.env.APIKEY
+            }
+        })
+        .then(data => data.json())
+        .then(data => {
+            if (!data.user) { return done(null, false); }
+            return done(null, data.user);
+        })
+        .catch(e => {
+            return done(null, false);
+        });
+    }));
+
+    passport.serializeUser(function (user, done) {
+        done(null, user);
+    });
+    
+    passport.deserializeUser(function (user, done) {
+        done(null, user);
+    });
+    
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    app.route('/login')
+    .post(passport.authenticate('local'),
+    (req,res) => {
+        res.json({message: 'Success logging in.', user: req.user});
+    });
+
+    app.route('/logout')
+        .get((req, res) => {
+            req.logout();
+            res.redirect('/');
+        });
+
+    app.route('/user')
+        .get((req, res) => {
+            if(req.user) res.json(req.user);
+            else return res.json({message: 'No user logged in.'});
+        });
 
     // DEFAULT ROOTS //
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname+'../../../build/index.html'));
-    });
-
-    const httpsAgent = new https.Agent({
-        rejectUnauthorized: false,
+        if(!req.user && req.path !== '/') return res.redirect('/');
+        return res.sendFile(path.join(__dirname+'../../../build/index.html'));
     });
 
     if(process.env.NODE_ENV !== 'development'){
@@ -117,6 +188,6 @@ const route = (app, serverhttp) => {
             }, 620000);
         });
     }
-}
+};
 
 module.exports = { route };

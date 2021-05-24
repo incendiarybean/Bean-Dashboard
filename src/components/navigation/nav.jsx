@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
 function Nav(props) {
 
     return(
-        <nav className='sticky max-h-full top-0 z-30 flex items-center justify-between flex-wrap bg-coolGray-100 dark:bg-coolGray-700 border-accent border-b-4 shadow'>
+        <nav className={!props.Authed ? 'hidden' : 'sticky max-h-full top-0 z-30 flex items-center justify-between flex-wrap bg-coolGray-100 dark:bg-coolGray-700 border-accent border-b-4 shadow'}>
             <div className='block lg:hidden p-2'>
                 <button onClick={props.Theme.menu} className='links mr-4 flex items-center px-3 py-2 border rounded text-accent border-accent hover:text-accent hover:bg-accent'>
                     <props.icons.Burger/>
@@ -60,7 +61,7 @@ function Nav(props) {
                         </div>
                     </div>
                 </div>
-                <div tabIndex='1' className='text-coolGray-800 dark:text-white linklist hidden lg:block h-full relative started-container shadow-full inline-block p-2 lg:-ml-2 lg:pl-2 w-full lg:w-56 hover:bg-coolGray-200 dark:hover:bg-coolGray-800 lg:inline-block lg:mt-0 cursor-pointer rounded-b'>
+                <div tabIndex='1' className='text-coolGray-800 dark:text-white linklist hidden lg:block h-full relative started-container shadow-full inline-block p-2 lg:-ml-2 lg:pl-2 w-full lg:w-56 hover:bg-coolGray-200 dark:hover:bg-coolGray-800 lg:inline-block lg:mt-0 cursor-pointer rounded-t'>
                     <div className='started p-1 text-md'>
                         <div className='text-md flex flex-row justify-between'>
                             <p className="">Settings</p>
@@ -68,8 +69,8 @@ function Nav(props) {
                         </div>
                         <p className='lg:px-1 lg:-mt-1 lg:ml-1 text-accent text-xs'>Change your preferences.</p>
                     </div>
-                    <div className='animate__animated animate__fadeIn animate__faster absolute bg-white text-left lg:text-center z-50 w-full lg:w-56 shadow lg:mt-2 -ml-2 rounded-b' style={{display:'none'}}>
-                        <div className='w-full h-16 flex flex-col justify-around bg-coolGray-100 dark:bg-coolGray-700 p-4 items-center'>
+                    <div className='animate__animated animate__fadeIn animate__faster absolute bg-coolGray-100 dark:bg-coolGray-800 text-left lg:text-center z-50 w-full lg:w-56 shadow lg:mt-2 -ml-2 rounded-b' style={{display:'none'}}>
+                        <div className='w-full h-16 flex flex-col justify-around bg-coolGray-100 dark:bg-coolGray-800 p-4 items-center'>
                             <p className='h-6'>Pick a Colour</p>
                             <div className='flex justify-around'>
                                 <span id='set-blue' onClick={() => {props.Theme.setColor('blue');}} className='block p-1 self-center hover:border-2 border-gray-400 rounded-full transition ease-in duration-300'>
@@ -95,7 +96,7 @@ function Nav(props) {
                                 </span>
                             </div>
                         </div>
-                        <div className='bg-coolGray-100 dark:bg-coolGray-700 w-full flex justify-around p-4 hover:bg-hover items-center rounded-b'>
+                        <div className='bg-coolGray-100 dark:bg-coolGray-800 w-full flex justify-around p-4 hover:bg-hover items-center rounded-b'>
                             <p>Light</p>
                             <div className='relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in'>
                                 <input type='checkbox' onClick={props.Theme.setTheme} name='toggle' id='toggle' className='toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer'/>
@@ -103,10 +104,14 @@ function Nav(props) {
                             </div>
                             <p>Dark</p>
                         </div>
+                        <div className='bg-coolGray-100 dark:bg-coolGray-800 w-full flex justify-around p-4 hover:bg-hover items-center rounded-b'>
+                            <a href="/logout" className="hover:text-blue-400">Sign out (<i>{props.UserInfo.username}</i>)?</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </nav>
     );
+    
 }
 export default Nav;

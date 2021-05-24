@@ -1,4 +1,4 @@
-FROM arm64v8/node:current-slim
+FROM node:current-slim
 
 WORKDIR /beanpi
 COPY . .

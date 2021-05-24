@@ -3,7 +3,7 @@ const fs = require('fs');
 const app = express();
 let time = new Date();
 
-require('dotenv').config()
+require('dotenv').config();
 
 const routes = require('./routes/index.js').route;
 
