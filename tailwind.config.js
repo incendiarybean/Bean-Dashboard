@@ -78,6 +78,7 @@ module.exports = {
         fill: ['dark', 'responsive', 'hover', 'focus', 'active'],
         backgroundColor: ['dark', 'responsive', 'hover', 'focus', 'active', 'group-hover'],
         animation: ['dark', 'hover', 'focus'],
+        border: ['dark', 'hover', 'active', 'focus', 'group-focus', 'focus-within'],
         zIndex: ['dark', 'hover', 'active', 'focus', 'group-focus', 'focus-within'],
         borderColor: ['dark', 'hover', 'active', 'focus', 'group-focus', 'focus-within'],
         shadow: ['dark', 'hover', 'active', 'focus', 'group-focus', 'focus-within'],

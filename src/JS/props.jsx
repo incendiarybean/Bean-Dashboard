@@ -344,7 +344,8 @@ function RenderProps(socket) {
                     body: JSON.stringify(obj)
                 })
                 .then(() => {
-                    socket.emit('STICKY_UPDATE');
+                    props.custom('💠 Saved Note!');
+                    return socket.emit('STICKY_UPDATE');
                 })
                 .catch(e => {
                     console.log(e);

@@ -1,10 +1,26 @@
-FROM node:current-slim
+#BUILD
+FROM node:current-slim as build
 
-WORKDIR /beanpi
-COPY . .
-RUN yarn install --production
+WORKDIR /bean-dashboard
+ENV PATH /bean-dashboard/node_modules/.bin:$PATH
+
+COPY ./package.json ./
+COPY ./package-lock.json ./
+
+RUN yarn install --silent
 RUN yarn add react-scripts@4.0.1 -g --silent
 
 COPY . ./
+RUN yarn build --production
 
-CMD ["yarn", "start"]
+#PROD
+FROM node:current-slim
+WORKDIR /bean-dashboard
+
+COPY run.sh /bean-dashboard/run.sh
+COPY --from=build bean-dashboard/package.json /bean-dashboard/package.json
+COPY --from=build bean-dashboard/yarn.lock /bean-dashboard/yarn.lock
+COPY --from=build bean-dashboard/build /bean-dashboard/build
+COPY --from=build bean-dashboard/server /bean-dashboard/server
+
+CMD ["./run.sh"]

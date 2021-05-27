@@ -74,6 +74,24 @@ const route = (app, serverhttp) => {
         pathRewrite: {
             [`^/`]: '/',
         },
+        onProxyReq: (proxyReq, req, res) => {
+            if (!req.body || !Object.keys(req.body).length) {
+                return;
+            }
+        
+            const contentType = proxyReq.getHeader('Content-Type');
+            const writeBody = (bodyData) => {
+                proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+                proxyReq.write(bodyData);
+            };
+        
+            if (contentType === 'application/json') {
+                writeBody(JSON.stringify(req.body));
+            }
+        },
+        onError: (err, req, res, target) => {
+            console.log(err);
+        },
         headers: {
             'x-api-key': 'swagger',
             'Content-Type': 'application/json'
