@@ -6,6 +6,7 @@ ENV PATH /bean-dashboard/node_modules/.bin:$PATH
 
 COPY ./package.json ./
 COPY ./package-lock.json ./
+COPY ./run.sh ./
 
 RUN yarn install --silent
 RUN yarn add react-scripts@4.0.1 -g --silent
@@ -17,7 +18,7 @@ RUN yarn build --production
 FROM node:current-slim
 WORKDIR /bean-dashboard
 
-COPY run.sh /bean-dashboard/run.sh
+COPY --from=build bean-dashboard/run.sh /bean-dashboard/run.sh
 COPY --from=build bean-dashboard/package.json /bean-dashboard/package.json
 COPY --from=build bean-dashboard/yarn.lock /bean-dashboard/yarn.lock
 COPY --from=build bean-dashboard/build /bean-dashboard/build
