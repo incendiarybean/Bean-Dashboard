@@ -75,6 +75,11 @@ const route = (app, serverhttp) => {
             [`^/`]: '/',
         },
         onProxyReq: (proxyReq, req, res) => {
+
+            if(proxyReq.path.includes('sticky')){
+                req.body.author = req.user;
+            }
+
             if (!req.body || !Object.keys(req.body).length) {
                 return;
             }

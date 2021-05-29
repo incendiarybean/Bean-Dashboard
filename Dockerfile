@@ -3,6 +3,8 @@ FROM node:current-slim as build
 
 WORKDIR /bean-dashboard
 ENV PATH /bean-dashboard/node_modules/.bin:$PATH
+ARG REACT_APP_HOST=localhost
+ENV REACT_APP_HOST ${REACT_APP_HOST}
 
 COPY ./package.json ./
 COPY ./package-lock.json ./

@@ -36,6 +36,30 @@ function RenderProps(socket) {
     const props = {
         UserInfo: user,
         icons: icons,
+        animateCSS: (element, animation, prefix = 'animate__') => {
+            // We create a Promise and return it
+            return new Promise((resolve, reject) => {
+                const animationName = `${prefix}${animation}`;
+
+                let node;
+                if(typeof(element) === 'string'){
+                    node = document.querySelector(element);
+                } else {
+                    node = element;
+                }
+
+                node.classList.add(`${prefix}animated`, animationName);
+
+                // When the animation ends, we clean the classes and resolve the Promise
+                const handleAnimationEnd = (event) => {
+                    event.stopPropagation();
+                    node.classList.remove(`${prefix}animated`, animationName);
+                    resolve('Animation ended');
+                };
+
+                node.addEventListener('animationend', handleAnimationEnd, {once: true});
+            });
+        },
         Failed: () => {
             return (
                 <div className='p-2 flex-initial'>
@@ -294,7 +318,10 @@ function RenderProps(socket) {
                     'left':document.getElementById(note._id).offsetLeft,
                     'title':'eh',
                     'content':encodeURIComponent(content),
-                    'color':note.color
+                    'color':note.color,
+                    'author': note.author,
+                    'lastModified': note.lastModified,
+                    'notification': note.notification ? note.notification : null
                 };
                 return obj;
             },
@@ -308,24 +335,20 @@ function RenderProps(socket) {
                     return data;
                 }));
             },
-            showColor: (note) => {
-                let new_notes_arr = [];
-                Note.map(data => {
-                    if(data._id === note._id){
-                        switch(data.showColor){
-                            case 'block':
-                                data.showColor = 'hidden';
-                            break;
-                            default:
-                                data.showColor = 'block';
-                            break;
-                        }
-                        return new_notes_arr.push(data);
-                    } else {
-                        return new_notes_arr.push(data);
-                    }
-                });
-                return setNote(new_notes_arr);
+            showSettings: (note) => {
+                let current_note = document.getElementById(note._id);
+                let current_note_settings = current_note.querySelectorAll('#settings')[0];
+                let current_note_settings_hidden = current_note.querySelectorAll('#settings')[0].classList.contains('hidden');
+                
+                if(!current_note_settings_hidden){
+                    props.animateCSS(current_note_settings, 'fadeOut')
+                    .then(() => {
+                        current_note_settings.classList.add('hidden');
+                    });
+                } else {
+                    props.animateCSS(current_note_settings, 'fadeIn');
+                    current_note_settings.classList.remove('hidden');
+                }
             },
             logChange: (e, note) => {
                 e.persist();
@@ -350,6 +373,11 @@ function RenderProps(socket) {
                 .catch(e => {
                     console.log(e);
                 });
+            },
+            saveNotification: (e, note) => {
+                console.log(new Date(e.target.value).toISOString());
+                note.notification = new Date(e.target.value).toISOString();
+                props.Notes.logChange(e, note);
             },
             createNote: async (e) => {
                 if(e.target.id !== 'notes_container') return;
@@ -381,6 +409,8 @@ function RenderProps(socket) {
                         .then(data => data.json())
                         .then(data => {
                             props.custom('💠 Creating new note.');
+                            note.author = data.item.ops[0].author;
+                            note.lastModified = data.item.ops[0].lastModified;
                             return setNote(Note => [...Note, note]);
                         })
                         .catch(e => {
@@ -396,6 +426,7 @@ function RenderProps(socket) {
                 });
             },
             deleteNote: async (element, note) => {
+                document.getElementById('notes_container').removeChild(element);
                 fetch(`https://${process.env.REACT_APP_HOST}/api/v0/sticky/${note._id}`, {
                     method: 'DELETE'
                 })
@@ -403,8 +434,16 @@ function RenderProps(socket) {
                 .then(() => {
                     props.custom('💠 Deleted Note!');
                     element.removeEventListener('dragend', element);
-                    element.classList.remove('animate__fadeIn', 'animate__fadeOut');
-                    element.classList.add('animate__fadeOut');
+                    props.animateCSS(element, 'fadeOut')
+                    .then(() => {
+                        let new_notes_arr = [];
+                        new_notes_arr = Note.filter((data) => {
+                            if(data._id === note._id){
+                                return false;
+                            } else return true;
+                        });
+                        return setNote(new_notes_arr);
+                    });
                 })
                 .catch(e => {
                     console.log(e.toString());
