@@ -319,7 +319,7 @@ function RenderProps(socket) {
                     'title':'eh',
                     'content':encodeURIComponent(content),
                     'color':note.color,
-                    'author': note.author,
+                    'author': note.author ? note.author : props.UserInfo.username,
                     'lastModified': note.lastModified,
                     'notification': note.notification ? note.notification : null
                 };
@@ -351,6 +351,7 @@ function RenderProps(socket) {
                 }
             },
             logChange: (e, note) => {
+                note.author = props.UserInfo.username;
                 e.persist();
                 clearTimeout(timer);
                 timer = setTimeout(() => {
@@ -359,6 +360,7 @@ function RenderProps(socket) {
                 }, 2000);
             },
             log: async (obj, note) => {
+                obj.author = props.UserInfo.username;
                 return fetch(`https://${process.env.REACT_APP_HOST}/api/v0/sticky/${note._id}`, {
                     method: 'PATCH',
                     headers: {
@@ -375,9 +377,20 @@ function RenderProps(socket) {
                 });
             },
             saveNotification: (e, note) => {
-                console.log(new Date(e.target.value).toISOString());
                 note.notification = new Date(e.target.value).toISOString();
                 props.Notes.logChange(e, note);
+
+                let new_notes_arr = [];
+                props.Notes.Note.map(data => {
+                    if(data._id === note._id){
+                        return new_notes_arr.push(data);
+                    } else {
+                        new_notes_arr.push(data);
+                        return new_notes_arr.push(data);
+                    }
+                });
+                return setNote(new_notes_arr);
+
             },
             createNote: async (e) => {
                 if(e.target.id !== 'notes_container') return;
@@ -409,7 +422,7 @@ function RenderProps(socket) {
                         .then(data => data.json())
                         .then(data => {
                             props.custom('💠 Creating new note.');
-                            note.author = data.item.ops[0].author;
+                            note.author = props.UserInfo.username;
                             note.lastModified = data.item.ops[0].lastModified;
                             return setNote(Note => [...Note, note]);
                         })

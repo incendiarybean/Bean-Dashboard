@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 
 function Component(props){
+    
     useEffect(() => {
         props.drag(document.getElementById(props.data._id));
         if(props.Notes.element(props.data._id) !== null){
@@ -13,18 +14,12 @@ function Component(props){
         if(new Date(props.data.notification).toLocaleDateString() === new Date().toLocaleDateString()){
             props.custom('You have a pending sticky! Check it!');
         }
-
     }, [props]);
+
     return (
         <div drag='true' id={props.data._id} style={{'top':props.data.top, 'left':props.data.left}} className={`z-0 focus-within:z-50 active:z-50 focus:z-50 note animate__animated animate__fadeIn shadow absolute min-w-56 max-w-96 rounded bg-${props.data.color}-400`}>
             <div className={`note relative cursor-grab active:cursor-grabbing bg-${props.data.color}-600 rounded-t w-full p-1 flex justify-end text-${props.data.color}-600`}>
-                {/* <div className="flex justify-start"> */}
-                    <props.icons.openSettings {...props}/>
-                {/* </div> */}
-                {/* <div className="flex justify-end">
-                    <props.icons.NoteColor {...props}/>
-                    <props.icons.DeleteNote {...props}/>
-                </div> */}
+                <props.icons.openSettings {...props}/>
             </div>
             <div id="settings" className={`bg-white dark:bg-coolGray-800 text-coolGray-700 dark:text-white absolute -top-10 -left-52 w-48 animate__animated animate__fadeIn ${props.data.showColor} flex flex-wrap justify-around rounded m-1 shadow-lg`}>
                 <div className={` flex justify-between w-full rounded-t p-2`}>
@@ -49,7 +44,11 @@ function Component(props){
                             <p className="uppercase font-semibold text-xs p-1">Reminder:</p>
                         </div>
                         <input onChange={e => props.Notes.saveNotification(e, props.data)} className="bg-white dark:bg-coolGray-800 text-coolGray-700 dark:text-white ml-2 -my-1 " type="date"/>
-                        <p className="text-xs uppercase font-semibold ml-2">Alarm for: {props.data.notification ? props.data.notification.split('T')[0] : 'None set.'}</p>
+                        {props.data.notification ?
+                            <p className="text-xs uppercase font-semibold ml-2">Alarm for: {props.data.notification ? props.data.notification.split('T')[0] : 'None set.'}</p>
+                            :
+                            <p className="text-xs uppercase font-semibold ml-2">No Alarm Set.</p>
+                        }
                         <hr className="my-2"/>
                         <div onClick={e => props.Notes.deleteNote(props.Notes.element(props.data._id), props.data)} className="group flex justify-left hover:text-red-400 cursor-pointer w-3/4">
                             <props.icons.Trash {...props} />

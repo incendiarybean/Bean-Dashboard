@@ -8,7 +8,17 @@ module.exports = {
         './src/**/**/**/**/**/**/*.{jsx,js}'
         ],
         options: {
-            safelist: [/^bg-/, /^text-/, /^hover:/],
+            safelist: [
+                /^bg-/,
+                /^text-/,
+                /^hover:/,
+                'bg-yellow-600',
+                'bg-green-600',
+                'bg-blue-600',
+                'bg-gray-600',
+                'bg-purple-600',
+                'bg-red-600'
+            ],
         }
     },
     theme: {
